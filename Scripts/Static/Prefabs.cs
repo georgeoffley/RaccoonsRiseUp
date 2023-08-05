@@ -2,6 +2,7 @@ namespace Template;
 
 public static class Prefabs
 {
+    public static PackedScene Job { get; } = Load("UI/job");
     public static PackedScene Options { get; } = Load("UI/options");
 
     private static PackedScene Load(string path) =>
