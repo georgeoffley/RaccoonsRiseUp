@@ -7,6 +7,9 @@ public partial class UIJob : Node
     [Export] Button btnMinus;
     [Export] Button btnPlus;
 
+    public static event Action<Job> RaccoonAssigned;
+    public static event Action<Job> RaccoonUnassigned;
+
     public Job Job
     {
         get => job;
@@ -17,23 +20,10 @@ public partial class UIJob : Node
         }
     }
 
-    public int Count
+    public int CurEmployedRaccoons
     {
         get => int.Parse(labelCount.Text);
-        set
-        {
-            switch (job)
-            {
-                case Job.Woodcutter:
-                    Game.Woodcutters = value;
-                    break;
-                case Job.Researcher:
-                    Game.Researchers = value;
-                    break;
-            }
-
-            labelCount.Text = value + "";
-        }
+        set => labelCount.Text = value + "";
     }
 
     Job job;
@@ -42,20 +32,24 @@ public partial class UIJob : Node
     {
         btnMinus.Pressed += () =>
         {
-            if (Count <= 0)
+            // There are no more raccoons to take away from this job
+            if (CurEmployedRaccoons <= 0)
                 return;
 
-            Game.Raccoons++;
-            Count--;
+            // Raccoon is no longer employed
+            CurEmployedRaccoons--;
+            RaccoonUnassigned?.Invoke(job);
         };
 
         btnPlus.Pressed += () =>
         {
+            // No more raccoons are available to get a job
             if (Game.Raccoons <= 0)
                 return;
 
-            Game.Raccoons--;
-            Count++;
+            // Raccoon assigned to job
+            CurEmployedRaccoons++;
+            RaccoonAssigned?.Invoke(job);
         };
     }
 }
