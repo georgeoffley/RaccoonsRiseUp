@@ -1,0 +1,45 @@
+[gd_scene load_steps=2 format=3 uid="uid://bj2td4mjp6di0"]
+
+[ext_resource type="Script" path="res://Scripts/UI/UIJob.cs" id="1_ycc2n"]
+
+[node name="Job" type="PanelContainer"]
+size_flags_horizontal = 0
+size_flags_vertical = 0
+script = ExtResource("1_ycc2n")
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="HBox" type="HBoxContainer" parent="Margin"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 10
+
+[node name="Name" type="Label" parent="Margin/HBox"]
+layout_mode = 2
+text = "Woodcutter"
+vertical_alignment = 1
+
+[node name="Buttons" type="HBoxContainer" parent="Margin/HBox"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Minus" type="Button" parent="Margin/HBox/Buttons"]
+layout_mode = 2
+size_flags_vertical = 4
+text = "-"
+
+[node name="Plus" type="Button" parent="Margin/HBox/Buttons"]
+layout_mode = 2
+size_flags_vertical = 4
+text = "+"
+
+[node name="Count" type="Label" parent="Margin/HBox"]
+layout_mode = 2
+text = "0"
+vertical_alignment = 1
