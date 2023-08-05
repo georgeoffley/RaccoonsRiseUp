@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dguahjnd1njnr"]
 
-[ext_resource type="PackedScene" uid="uid://bj2td4mjp6di0" path="res://Scenes/Prefabs/UI/job.tscn" id="1_1bcf1"]
+[ext_resource type="Script" path="res://Scripts/UI/UIJobs.cs" id="1_k6fl7"]
 
 [node name="Jobs" type="PanelContainer"]
 anchors_preset = 15
@@ -8,6 +8,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_k6fl7")
 
-[node name="Job" parent="." instance=ExtResource("1_1bcf1")]
+[node name="GridContainer" type="GridContainer" parent="."]
 layout_mode = 2
+columns = 3
