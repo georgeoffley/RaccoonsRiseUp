@@ -11,24 +11,35 @@ public partial class UIInfo : Node
     public int Raccoons
     {
         get => int.Parse(labelRaccoons.Text);
-        set => labelRaccoons.Text = value + "";
+        set => labelRaccoons.Text = value.ToString();
     }
 
-    public int Woodcutters
-    {
-        get => int.Parse(labelWoodcutters.Text);
-        set => labelWoodcutters.Text = value + "";
-    }
-
-    public int Researchers
-    {
-        get => int.Parse(labelResearchers.Text);
-        set => labelResearchers.Text = value + "";
-    }
+    Dictionary<Job, Label> jobs;
 
     public override void _Ready()
     {
-        UIJob.RaccoonAssigned += job => Raccoons--;
-        UIJob.RaccoonUnassigned += job => Raccoons++;
+        jobs = new()
+        {
+            { Job.Woodcutter, labelWoodcutters },
+            { Job.Researcher, labelResearchers }
+        };
+
+        UIJob.RaccoonAssigned += job =>
+        {
+            var count = int.Parse(jobs[job].Text);
+            count++;
+            jobs[job].Text = count.ToString();
+
+            Raccoons--;
+        };
+
+        UIJob.RaccoonUnassigned += job =>
+        {
+            var count = int.Parse(jobs[job].Text);
+            count--;
+            jobs[job].Text = count.ToString();
+
+            Raccoons++;
+        };
     }
 }
