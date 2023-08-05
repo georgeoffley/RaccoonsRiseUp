@@ -2,7 +2,7 @@ namespace Template;
 
 public partial class UIJobs : Node
 {
-    [Export] public GridContainer grid;
+    [Export] GridContainer grid;
 
     public override void _Ready()
     {

@@ -2,10 +2,10 @@ namespace Template;
 
 public partial class UIJob : Node
 {
-    [Export] public Label labelName;
-    [Export] public Label labelCount;
-    [Export] public Button btnMinus;
-    [Export] public Button btnPlus;
+    [Export] Label labelName;
+    [Export] Label labelCount;
+    [Export] Button btnMinus;
+    [Export] Button btnPlus;
 
     public Job Job
     {
