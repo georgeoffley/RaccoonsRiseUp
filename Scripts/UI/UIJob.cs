@@ -16,14 +16,14 @@ public partial class UIJob : Node
         set
         {
             job = value;
-            labelName.Text = value + "";
+            labelName.Text = value.ToString();
         }
     }
 
     public int CurEmployedRaccoons
     {
         get => int.Parse(labelCount.Text);
-        set => labelCount.Text = value + "";
+        set => labelCount.Text = value.ToString();
     }
 
     Job job;
