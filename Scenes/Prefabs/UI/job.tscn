@@ -2,12 +2,14 @@
 
 [ext_resource type="Script" path="res://Scripts/UI/UIJob.cs" id="1_ycc2n"]
 
-[node name="Job" type="PanelContainer" node_paths=PackedStringArray("labelName", "labelCount")]
+[node name="Job" type="PanelContainer" node_paths=PackedStringArray("labelName", "labelCount", "btnMinus", "btnPlus")]
 size_flags_horizontal = 0
 size_flags_vertical = 0
 script = ExtResource("1_ycc2n")
 labelName = NodePath("Margin/HBox/Name")
 labelCount = NodePath("Margin/HBox/Count")
+btnMinus = NodePath("Margin/HBox/Buttons/Minus")
+btnPlus = NodePath("Margin/HBox/Buttons/Plus")
 
 [node name="Margin" type="MarginContainer" parent="."]
 layout_mode = 2
