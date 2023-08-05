@@ -2,20 +2,18 @@ namespace Template;
 
 public partial class UIJobs : Node
 {
-    GridContainer grid;
+    [Export] public GridContainer grid;
 
     public override void _Ready()
     {
-        grid = GetNode<GridContainer>("GridContainer");
-
-        AddJob("Woodcutter");
-        AddJob("Researcher");
+        AddJob(Job.Woodcutter);
+        AddJob(Job.Researcher);
     }
 
-    void AddJob(string name)
+    void AddJob(Job job)
     {
-        var job = (UIJob)Prefabs.Job.Instantiate();
-        job.JobName = name;
-        grid.AddChild(job);
+        var jobPrefab = (UIJob)Prefabs.Job.Instantiate();
+        jobPrefab.Job = job;
+        grid.AddChild(jobPrefab);
     }
 }
