@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="JobData" load_steps=2 format=3 uid="uid://bcblobkilj1wj"]
+
+[ext_resource type="Script" path="res://Scripts/JobData.cs" id="1_apxqr"]
+
+[resource]
+script = ExtResource("1_apxqr")
+ResourceType = 0
+GatherRate = 0.1
+GatherAmount = 1.0
