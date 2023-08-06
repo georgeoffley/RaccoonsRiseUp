@@ -1,4 +1,4 @@
-namespace Template;
+namespace RRU;
 
 using Godot.Collections;
 

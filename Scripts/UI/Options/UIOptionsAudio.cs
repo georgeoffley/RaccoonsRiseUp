@@ -1,4 +1,4 @@
-namespace Template;
+namespace RRU;
 
 public partial class UIOptionsAudio : Control
 {

@@ -1,4 +1,4 @@
-namespace Template;
+namespace RRU;
 
 public static class Prefabs
 {
