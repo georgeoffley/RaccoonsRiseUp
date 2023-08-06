@@ -5,6 +5,7 @@ public partial class Game : Node
     public static int Raccoons { get; set; } = 3;
 
     [Export] UIInfo pageInfo;
+    [Export] UIJobs pageJobs;
 
     Dictionary<Job, int> jobs = new()
     {
@@ -15,6 +16,7 @@ public partial class Game : Node
     public override void _Ready()
     {
         pageInfo.Raccoons = Raccoons;
+        pageJobs.Raccoons = Raccoons;
 
         UIJob.RaccoonAssigned += job =>
         {
