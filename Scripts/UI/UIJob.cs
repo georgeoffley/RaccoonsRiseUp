@@ -51,5 +51,10 @@ public partial class UIJob : Node
             CurEmployedRaccoons++;
             RaccoonAssigned?.Invoke(job);
         };
+
+        Game.JobsChanged += jobs =>
+        {
+            CurEmployedRaccoons = jobs[job];
+        };
     }
 }

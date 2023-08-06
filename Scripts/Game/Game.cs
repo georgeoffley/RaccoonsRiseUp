@@ -6,7 +6,9 @@ public partial class Game : Node
 {
     public static Game Instance { get; private set; }
     public static int Raccoons { get; set; } = 30;
+    
     public static event Action<Dictionary<ResourceType, double>> ResourcesChanged;
+    public static event Action<Dictionary<JobType, int>> JobsChanged;
 
     [Export] UIInfo pageInfo;
     [Export] UIJobs pageJobs;
@@ -90,6 +92,9 @@ public partial class Game : Node
         numJobs = saveData.NumJobs;
         numResources = saveData.NumResources;
         numStructures = saveData.NumStructures;
+
+        ResourcesChanged?.Invoke(numResources);
+        JobsChanged?.Invoke(numJobs);
     }
 
     void ResourcesGainedByStructures(double delta, ref bool resourcesChanged)
