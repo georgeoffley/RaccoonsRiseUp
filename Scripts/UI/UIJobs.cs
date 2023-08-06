@@ -13,8 +13,8 @@ public partial class UIJobs : Node
 
     public override void _Ready()
     {
-        AddJob(Job.Woodcutter);
-        AddJob(Job.Researcher);
+        AddJob(JobType.Woodcutter);
+        AddJob(JobType.Researcher);
 
         UIJob.RaccoonAssigned += job =>
         {
@@ -27,7 +27,7 @@ public partial class UIJobs : Node
         };
     }
 
-    void AddJob(Job job)
+    void AddJob(JobType job)
     {
         var jobPrefab = (UIJob)Prefabs.Job.Instantiate();
         jobPrefab.Job = job;

@@ -14,14 +14,20 @@ public partial class UIInfo : Node
         set => labelRaccoons.Text = value.ToString();
     }
 
-    Dictionary<Job, Label> jobs;
+    Dictionary<JobType, Label> jobs;
 
     public override void _Ready()
     {
         jobs = new()
         {
-            { Job.Woodcutter, labelWoodcutters },
-            { Job.Researcher, labelResearchers }
+            { JobType.Woodcutter, labelWoodcutters },
+            { JobType.Researcher, labelResearchers }
+        };
+
+        Game.ResourcesChanged += resources =>
+        {
+            labelWood.Text = Mathf.Round(resources[ResourceType.Wood]).ToString();
+            labelTech.Text = Mathf.Round(resources[ResourceType.Tech]).ToString();
         };
 
         UIJob.RaccoonAssigned += job =>
