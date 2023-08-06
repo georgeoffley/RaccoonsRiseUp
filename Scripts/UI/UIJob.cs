@@ -7,10 +7,10 @@ public partial class UIJob : Node
     [Export] Button btnMinus;
     [Export] Button btnPlus;
 
-    public static event Action<Job> RaccoonAssigned;
-    public static event Action<Job> RaccoonUnassigned;
+    public static event Action<JobType> RaccoonAssigned;
+    public static event Action<JobType> RaccoonUnassigned;
 
-    public Job Job
+    public JobType Job
     {
         get => job;
         set
@@ -26,7 +26,7 @@ public partial class UIJob : Node
         set => labelCount.Text = value.ToString();
     }
 
-    Job job;
+    JobType job;
 
     public override void _Ready()
     {
