@@ -14,7 +14,25 @@ public partial class Game : Node
         { JobType.Researcher, 0 }
     };
 
-    Dictionary<JobType, JobData> jobData = new();
+    Dictionary<JobType, JobData> jobData = new()
+    {
+        { 
+            JobType.Woodcutter, new JobData 
+            {
+                ResourceType = ResourceType.Wood,
+                GatherRate = 1,
+                GatherAmount = 1
+            }
+        },
+        {
+            JobType.Researcher, new JobData
+            {
+                ResourceType = ResourceType.Tech,
+                GatherRate = 1,
+                GatherAmount = 1
+            }
+        }
+    };
 
     Dictionary<ResourceType, double> resources = new()
     {
@@ -67,8 +85,6 @@ public partial class Game : Node
         pageInfo.Raccoons = Raccoons;
         pageJobs.Raccoons = Raccoons;
 
-        LoadJobData();
-
         UIJob.RaccoonAssigned += job =>
         {
             numJobs[job]++;
@@ -91,15 +107,6 @@ public partial class Game : Node
 
         if (resourcesChanged)
             ResourcesChanged?.Invoke(resources);
-    }
-
-    void LoadJobData()
-    {
-        foreach (var file in DirAccess.GetFilesAt("res://Data/Jobs"))
-        {
-            var data = GD.Load<JobData>($"res://Data/Jobs/{file}");
-            jobData.Add(data.JobType, data);
-        }
     }
 
     void ResourcesGainedByStructures(double delta, ref bool resourcesChanged)

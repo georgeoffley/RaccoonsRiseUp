@@ -1,13 +1,11 @@
 ﻿namespace RRU;
 
-public partial class JobData : Resource
+public class JobData
 {
-    [Export] public JobType JobType { get; set; }
-    [Export] public ResourceType ResourceType { get; set; }
-    [Export] public double GatherRate { get; set; }
-    [Export] public double GatherAmount { get; set; }
-
+    public ResourceType ResourceType { get; set; }
     public double ElpasedTime { get; set; }
+    public double GatherRate { get; set; }
+    public double GatherAmount { get; set; }
 }
 
 public enum JobType
