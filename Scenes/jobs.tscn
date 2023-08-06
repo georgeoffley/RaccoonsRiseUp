@@ -9,41 +9,41 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_k6fl7")
-labelRaccoons = NodePath("MarginContainer/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer/Raccoons")
-grid = NodePath("MarginContainer/VBoxContainer/GridContainer")
+labelRaccoons = NodePath("Margin/VBox/PanelContainer/Margin/HBox/Raccoons")
+grid = NodePath("Margin/VBox/GridContainer")
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="Margin" type="MarginContainer" parent="."]
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+[node name="VBox" type="VBoxContainer" parent="Margin"]
 layout_mode = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/VBoxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="Margin/VBox"]
 layout_mode = 2
 size_flags_horizontal = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/PanelContainer"]
+[node name="Margin" type="MarginContainer" parent="Margin/VBox/PanelContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/PanelContainer/MarginContainer"]
+[node name="HBox" type="HBoxContainer" parent="Margin/VBox/PanelContainer/Margin"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="Margin/VBox/PanelContainer/Margin/HBox"]
 layout_mode = 2
 text = "Unemployed Raccoons:"
 
-[node name="Raccoons" type="Label" parent="MarginContainer/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer"]
+[node name="Raccoons" type="Label" parent="Margin/VBox/PanelContainer/Margin/HBox"]
 layout_mode = 2
 text = "0"
 
-[node name="GridContainer" type="GridContainer" parent="MarginContainer/VBoxContainer"]
+[node name="GridContainer" type="GridContainer" parent="Margin/VBox"]
 layout_mode = 2
 columns = 3
