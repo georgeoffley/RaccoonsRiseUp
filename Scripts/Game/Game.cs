@@ -14,26 +14,6 @@ public partial class Game : Node
         { JobType.Researcher, 0 }
     };
 
-    Dictionary<JobType, JobData> jobData = new()
-    {
-        { 
-            JobType.Woodcutter, new JobData 
-            {
-                ResourceType = ResourceType.Wood,
-                GatherRate = 1,
-                GatherAmount = 1
-            }
-        },
-        {
-            JobType.Researcher, new JobData
-            {
-                ResourceType = ResourceType.Tech,
-                GatherRate = 1,
-                GatherAmount = 1
-            }
-        }
-    };
-
     Dictionary<ResourceType, double> resources = new()
     {
         { ResourceType.Wood, 0 },
@@ -44,40 +24,6 @@ public partial class Game : Node
     {
         { StructureType.LumberCamp, 0 },
         { StructureType.ResearchCamp, 0 }
-    };
-
-    Dictionary<StructureType, StructureData> structureData = new()
-    {
-        { 
-            StructureType.LumberCamp, new StructureData 
-            {
-                Resources = new()
-                {
-                    { 
-                        ResourceType.Wood, new ResourceData 
-                        {
-                            GatherRate = 0.1,
-                            GatherAmount = 1
-                        }
-                    }
-                }
-            }
-        },
-        {
-            StructureType.ResearchCamp, new StructureData
-            {
-                Resources = new()
-                {
-                    {
-                        ResourceType.Tech, new ResourceData
-                        {
-                            GatherRate = 0.5,
-                            GatherAmount = 1
-                        }
-                    }
-                }
-            }
-        }
     };
 
     public override void _Ready()
