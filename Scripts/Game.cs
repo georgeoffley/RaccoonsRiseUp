@@ -8,7 +8,13 @@ public partial class Game : Node
     [Export] UIInfo pageInfo;
     [Export] UIJobs pageJobs;
 
-    Dictionary<JobType, JobData> jobs = new()
+    Dictionary<JobType, int> numJobs = new()
+    {
+        { JobType.Woodcutter, 0 },
+        { JobType.Researcher, 0 }
+    };
+
+    Dictionary<JobType, JobData> jobData = new()
     {
         { 
             JobType.Woodcutter, new JobData 
@@ -34,12 +40,17 @@ public partial class Game : Node
         { ResourceType.Tech, 0 }
     };
 
-    Dictionary<StructureType, StructureData> structures = new()
+    Dictionary<StructureType, int> numStructures = new()
+    {
+        { StructureType.LumberCamp, 0 },
+        { StructureType.ResearchCamp, 0 }
+    };
+
+    Dictionary<StructureType, StructureData> structureData = new()
     {
         { 
             StructureType.LumberCamp, new StructureData 
             {
-                NumStructures = 0,
                 Resources = new()
                 {
                     { 
@@ -55,7 +66,6 @@ public partial class Game : Node
         {
             StructureType.ResearchCamp, new StructureData
             {
-                NumStructures = 0,
                 Resources = new()
                 {
                     {
@@ -77,13 +87,13 @@ public partial class Game : Node
 
         UIJob.RaccoonAssigned += job =>
         {
-            jobs[job].NumWorkers++;
+            numJobs[job]++;
             Raccoons--;
         };
 
         UIJob.RaccoonUnassigned += job =>
         {
-            jobs[job].NumWorkers--;
+            numJobs[job]--;
             Raccoons++;
         };
     }
@@ -101,11 +111,11 @@ public partial class Game : Node
 
     void ResourcesGainedByStructures(double delta, ref bool resourcesChanged)
     {
-        foreach (var structure in structures)
+        foreach (var structure in structureData)
         {
             var structureData = structure.Value;
 
-            if (structureData.NumStructures == 0)
+            if (numStructures[structure.Key] == 0)
                 continue;
 
             structureData.Resources.ForEach(x => x.Value.ElpasedTime += delta);
@@ -118,7 +128,7 @@ public partial class Game : Node
                     var timesEarned = resourceData.ElpasedTime / resourceData.GatherRate;
 
                     resourceData.ElpasedTime -= resourceData.GatherRate * timesEarned;
-                    resources[resource.Key] += timesEarned * structureData.NumStructures;
+                    resources[resource.Key] += timesEarned * numStructures[structure.Key];
                     resourcesChanged = true;
                 }
             }
@@ -127,11 +137,11 @@ public partial class Game : Node
 
     void ResourcesGainedByJobs(double delta, ref bool resourcesChanged)
     {
-        foreach (var job in jobs)
+        foreach (var job in jobData)
         {
             var jobData = job.Value;
 
-            if (jobData.NumWorkers == 0)
+            if (numJobs[job.Key] == 0)
                 continue;
 
             jobData.ElpasedTime += delta;
@@ -141,7 +151,7 @@ public partial class Game : Node
                 var timesEarned = jobData.ElpasedTime / jobData.GatherRate;
 
                 jobData.ElpasedTime -= jobData.GatherRate * timesEarned;
-                resources[jobData.ResourceType] += timesEarned * jobData.NumWorkers;
+                resources[jobData.ResourceType] += timesEarned * numJobs[job.Key];
                 resourcesChanged = true;
             }
         }
