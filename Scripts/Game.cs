@@ -121,7 +121,7 @@ public partial class Game : Node
                     var timesEarned = resourceData.ElpasedTime / resourceData.GatherRate;
 
                     resourceData.ElpasedTime -= resourceData.GatherRate * timesEarned;
-                    resources[resource.Key] += timesEarned * numStructures[structure.Key];
+                    resources[resource.Key] += resourceData.GatherAmount * timesEarned * numStructures[structure.Key];
                     resourcesChanged = true;
                 }
             }
@@ -144,7 +144,7 @@ public partial class Game : Node
                 var timesEarned = jobData.ElpasedTime / jobData.GatherRate;
 
                 jobData.ElpasedTime -= jobData.GatherRate * timesEarned;
-                resources[jobData.ResourceType] += timesEarned * numJobs[job.Key];
+                resources[jobData.ResourceType] += jobData.GatherAmount * timesEarned * numJobs[job.Key];
                 resourcesChanged = true;
             }
         }
