@@ -43,6 +43,7 @@ public partial class Global : Node
         // Handle cleanup here
         OptionsManager.SaveOptions();
         OptionsManager.SaveHotkeys();
+        Game.Instance.SaveGame();
 
         Instance.GetTree().Quit();
 	}
