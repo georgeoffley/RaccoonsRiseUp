@@ -14,7 +14,7 @@ public partial class Game : Node
         { JobType.Researcher, 0 }
     };
 
-    Dictionary<ResourceType, double> resources = new()
+    Dictionary<ResourceType, double> numResources = new()
     {
         { ResourceType.Wood, 0 },
         { ResourceType.Tech, 0 }
@@ -52,7 +52,7 @@ public partial class Game : Node
         ResourcesGainedByJobs(delta, ref resourcesChanged);
 
         if (resourcesChanged)
-            ResourcesChanged?.Invoke(resources);
+            ResourcesChanged?.Invoke(numResources);
     }
 
     void ResourcesGainedByStructures(double delta, ref bool resourcesChanged)
@@ -74,7 +74,7 @@ public partial class Game : Node
                     var timesEarned = resourceData.ElpasedTime / resourceData.GatherRate;
 
                     resourceData.ElpasedTime -= resourceData.GatherRate * timesEarned;
-                    resources[resource.Key] += resourceData.GatherAmount * timesEarned * numStructures[structure.Key];
+                    numResources[resource.Key] += resourceData.GatherAmount * timesEarned * numStructures[structure.Key];
                     resourcesChanged = true;
                 }
             }
@@ -97,7 +97,7 @@ public partial class Game : Node
                 var timesEarned = jobData.ElpasedTime / jobData.GatherRate;
 
                 jobData.ElpasedTime -= jobData.GatherRate * timesEarned;
-                resources[jobData.ResourceType] += jobData.GatherAmount * timesEarned * numJobs[job.Key];
+                numResources[jobData.ResourceType] += jobData.GatherAmount * timesEarned * numJobs[job.Key];
                 resourcesChanged = true;
             }
         }
