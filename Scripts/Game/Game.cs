@@ -4,7 +4,6 @@ using Newtonsoft.Json;
 
 public partial class Game : Node
 {
-    public static Game Instance { get; private set; }
     public static int Raccoons { get; set; } = 30;
     
     public static event Action<Dictionary<ResourceType, double>> ResourcesChanged;
@@ -13,27 +12,60 @@ public partial class Game : Node
     [Export] UIInfo pageInfo;
     [Export] UIJobs pageJobs;
 
-    Dictionary<JobType, int> numJobs = new()
+    static Dictionary<JobType, int> numJobs = new()
     {
         { JobType.Woodcutter, 0 },
         { JobType.Researcher, 0 }
     };
 
-    Dictionary<ResourceType, double> numResources = new()
+    static Dictionary<ResourceType, double> numResources = new()
     {
         { ResourceType.Wood, 0 },
         { ResourceType.Tech, 0 }
     };
 
-    Dictionary<StructureType, int> numStructures = new()
+    static Dictionary<StructureType, int> numStructures = new()
     {
         { StructureType.LumberCamp, 0 },
         { StructureType.ResearchCamp, 0 }
     };
 
+    public static void SaveGame()
+    {
+        var saveData = new SaveData
+        {
+            Raccoons = Raccoons,
+            NumJobs = numJobs,
+            NumResources = numResources,
+            NumStructures = numStructures
+        };
+
+        var content = JsonConvert.SerializeObject(saveData, Formatting.Indented);
+
+        using var file = FileAccess.Open("user://save_game.dat", FileAccess.ModeFlags.Write);
+        file.StoreString(content);
+    }
+
+    public static void LoadGame()
+    {
+        if (!FileAccess.FileExists("user://save_game.dat"))
+            return;
+
+        using var file = FileAccess.Open("user://save_game.dat", FileAccess.ModeFlags.Read);
+        string content = file.GetAsText();
+
+        var saveData = JsonConvert.DeserializeObject<SaveData>(content);
+        Raccoons = saveData.Raccoons;
+        numJobs = saveData.NumJobs;
+        numResources = saveData.NumResources;
+        numStructures = saveData.NumStructures;
+
+        ResourcesChanged?.Invoke(numResources);
+        JobsChanged?.Invoke(numJobs);
+    }
+
     public override void _Ready()
     {
-        Instance = this;
         LoadGame();
 
         pageInfo.Raccoons = Raccoons;
@@ -61,40 +93,6 @@ public partial class Game : Node
 
         if (resourcesChanged)
             ResourcesChanged?.Invoke(numResources);
-    }
-
-    public void SaveGame()
-    {
-        var saveData = new SaveData
-        {
-            Raccoons = Raccoons,
-            NumJobs = numJobs,
-            NumResources = numResources,
-            NumStructures = numStructures
-        };
-
-        var content = JsonConvert.SerializeObject(saveData, Formatting.Indented);
-
-        using var file = FileAccess.Open("user://save_game.dat", FileAccess.ModeFlags.Write);
-        file.StoreString(content);
-    }
-
-    public void LoadGame()
-    {
-        if (!FileAccess.FileExists("user://save_game.dat"))
-            return;
-
-        using var file = FileAccess.Open("user://save_game.dat", FileAccess.ModeFlags.Read);
-        string content = file.GetAsText();
-
-        var saveData = JsonConvert.DeserializeObject<SaveData>(content);
-        Raccoons = saveData.Raccoons;
-        numJobs = saveData.NumJobs;
-        numResources = saveData.NumResources;
-        numStructures = saveData.NumStructures;
-
-        ResourcesChanged?.Invoke(numResources);
-        JobsChanged?.Invoke(numJobs);
     }
 
     void ResourcesGainedByStructures(double delta, ref bool resourcesChanged)

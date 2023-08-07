@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3 uid="uid://dbntqah85y4se"]
+
+[ext_resource type="Script" path="res://Scripts/UI/UITechNode.cs" id="1_oeyy4"]
+[ext_resource type="Texture2D" uid="uid://drgg1n8mxip81" path="res://Sprites/Icons/wood-beam.svg" id="2_hpyo7"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nj67c"]
+bg_color = Color(0, 0, 0, 1)
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.141176, 0.145098, 0.145098, 1)
+corner_radius_top_left = 25
+corner_radius_top_right = 10
+corner_radius_bottom_right = 25
+corner_radius_bottom_left = 5
+corner_detail = 1
+
+[node name="TechNode" type="PanelContainer"]
+offset_right = 128.0
+offset_bottom = 128.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_nj67c")
+script = ExtResource("1_oeyy4")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 2
+texture = ExtResource("2_hpyo7")
+expand_mode = 1
