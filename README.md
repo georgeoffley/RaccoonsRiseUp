@@ -1,13 +1,16 @@
 https://github.com/valkyrienyanko/RaccoonsRiseUp/assets/6277739/8513bf82-a8f4-4abd-9a51-2447b479670b
 
+https://github.com/valkyrienyanko/RaccoonsRiseUp/assets/6277739/6c40ee1d-ba0c-4c49-86ef-4990908ef7f7
+
 ## About
 Text-based game taking inspiration from Kittens Game and Forager.
 
 ## Features
 - [x] Each resource has its own unique gather rate and amount
 - [x] Game data is saved on exit
+- [x] Map page
+- [ ] Structure page
 - [ ] Tech nodes (WIP)
-- [ ] Map page
 
 ## Contributing
 Please have a look at the [projects current issues](https://github.com/valkyrienyanko/RaccoonsRiseUp/issues). If you have any questions talk to `valk2023` on Discord.
