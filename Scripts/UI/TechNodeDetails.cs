@@ -5,6 +5,12 @@ public sealed partial class TechNodeDetails : Control
 	private const string TextStatusLearned = "Learned";
 	private const string TextStatusNotLearned = "Not Learned";
 
+	private const string TextRequiredSingular = "Required Upgrade";
+	private const string TextRequiredPlural = "Required Upgrades";
+
+	[Export]
+	private TechDataService _dataService;
+
 	[Export]
 	private HSplitContainer _splitView;
 
@@ -16,14 +22,22 @@ public sealed partial class TechNodeDetails : Control
 	private Label _labelStatus;
 	private Button _buttonLearn;
 
+	private Control _prerequisiteView;
+	private Label _prerequisiteLabel;
+	private Control _requirementsView;
+
+	private TechInfo _info;
 	private bool _wasVisible;
 
     public override void _Ready()
     {
-		_icon = GetNode<TextureRect>("%Icon");
-		_labelType = GetNode<Label>("%Type");
+		_prerequisiteLabel = GetNode<Label>("%PrerequisiteLabel");
+		_prerequisiteView = GetNode<Control>("%Prerequisites");
+		_requirementsView = GetNode<Control>("%Requirements");
 		_labelDescription = GetNode<Label>("%Description");
 		_labelStatus = GetNode<Label>("%LearnState");
+		_icon = GetNode<TextureRect>("%Icon");
+		_labelType = GetNode<Label>("%Type");
 
 		_buttonLearn = GetNode<Button>("%BtnLearn");
 		_buttonLearn.Pressed += OnLearnPressed;
@@ -36,8 +50,44 @@ public sealed partial class TechNodeDetails : Control
 
 	private void SetLearnState(bool isLearned)
 	{
-		_buttonLearn.Disabled = isLearned;
+		bool isLocked = !_dataService.IsUnlocked(_info?.Id);
+
+		_buttonLearn.Disabled = isLearned || isLocked;
 		_labelStatus.Text = isLearned ? TextStatusLearned : TextStatusNotLearned;
+	}
+
+	private void UpdateDetails()
+	{
+		TechUpgradeInfo upgradeInfo = _dataService.GetInfoForId(_info.Id);
+		ReadOnlySpan<string> requirements = upgradeInfo.RequiredUpgradeIds;
+
+		_prerequisiteView.Visible = requirements.Length > 0;
+
+		if (requirements.Length < 1)
+			return;
+
+		// Clear requirements
+		for (int i = _requirementsView.GetChildCount(); i --> 0;)
+		{
+			_requirementsView
+				.GetChild(i)
+				.QueueFree();
+		}
+
+		_prerequisiteLabel.Text = requirements.Length > 1 ? TextRequiredPlural : TextRequiredSingular;
+
+		// Update requirements
+		for (int i = 0; i < requirements.Length; ++ i)
+		{
+			TechUpgradeInfo requirementInfo = _dataService.GetInfoForId(requirements[i]);
+
+			_requirementsView.AddChild(
+				new Label()
+				{
+					Text = $"* {requirementInfo.DisplayName}"
+				}
+			);
+		}
 	}
 
 	private void SetVisibility(bool visible)
@@ -77,7 +127,7 @@ public sealed partial class TechNodeDetails : Control
 
 	/// Signal Handlers ///
 
-	public void OnShowDetailRequested(TechNodeInfo info)
+	public void OnShowDetailRequested(TechInfo info)
 	{
 		if (info == null)
 		{
@@ -85,16 +135,18 @@ public sealed partial class TechNodeDetails : Control
 			return;
 		}
 
+		TechUpgradeInfo upgradeInfo = _dataService.GetInfoForId(id: info.Id);
+		_info = info;
+
 		SetVisibility(true);
 
-		// TODO: Maybe change this into something else later ??
-		_labelType.Text = info.Type.ToString();
+		_labelType.Text = upgradeInfo.DisplayName;
 
 		_labelDescription.Text = info.Data.Description;
 		_icon.Texture = info.Data.GetImage();
 
-		// TODO: Implement 'learn' state
-		SetLearnState(false);
+		SetLearnState(_dataService.IsLearned(info.Id));
+		UpdateDetails();
 	}
 
 	public void OnHideRequested()
@@ -104,6 +156,7 @@ public sealed partial class TechNodeDetails : Control
 
 	private void OnLearnPressed()
 	{
-		// TODO: Implement
+		_dataService.Learn(_info.Id);
+		SetLearnState(true);
 	}
 }

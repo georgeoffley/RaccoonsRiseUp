@@ -1,7 +1,13 @@
 namespace RRU;
 
-public sealed partial class TechNodeInfo: RefCounted
+/// <summary>
+/// A TechInfo represents an instance of TechData with its own modifiers
+/// </summary>
+public sealed partial class TechInfo: RefCounted
 {
+	public StringName Id;
+	public float Modifier;
+
 	public TechData Data;
 	public TechType Type;
 
@@ -9,10 +15,12 @@ public sealed partial class TechNodeInfo: RefCounted
 	/// Creates a Godot-compatible info object from a given type
 	/// </summary>
 	/// <returns></returns>
-	public static TechNodeInfo FromType(TechType type)
+	public static TechInfo FromType(StringName id, float modifier, TechType type)
 	{
-		TechNodeInfo info = new()
+		TechInfo info = new()
 		{
+			Id = id,
+			Modifier = modifier,
 			Type = type
 		};
 

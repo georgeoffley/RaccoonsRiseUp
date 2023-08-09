@@ -5,18 +5,29 @@ public partial class UITechNode : Control
     private const int DescriptionFontSize = 32;
     private const int DescriptionOffset = 125;
 
+    private static Color LearnedColour
+        => new(0.3f, 1.0f, 0.3f, 0.5f);
+
+    private static Color LockedColour
+        => new(1.0f, 0.3f, 0.3f, 0.35f);
+
     public static event Action<Vector2> ClickedOnNode;
 
     [Signal]
-    public delegate void ShowDetailRequestEventHandler(TechNodeInfo info);
+    public delegate void ShowDetailRequestEventHandler(TechInfo info);
+
+    private TextureRect textureRect;
 
     public bool IsActive { get; set; }
 
+    TechNodeState nodeState;
     GTween tweenScale;
-    TechNodeInfo info;
+    TechInfo info;
 
     public override void _Ready()
     {
+        nodeState = TechNodeState.Locked;
+        textureRect = GetNode<TextureRect>("%TextureRect");
         PivotOffset += Size / 2;
 
         MouseEntered += OnHoverEnter;
@@ -24,27 +35,30 @@ public partial class UITechNode : Control
         GuiInput += OnGuiInput;
     }
 
-    public void Setup(TechNodeInfo info)
+    public void Setup(TechInfo info)
     {
         this.info = info;
-        SetImage(this.info.Type);
+        textureRect.Texture = info.Data.GetImage();
     }
 
-    void SetImage(TechType techType)
+    public void SetLearnState(TechNodeState state)
     {
-        var imagePath = $"res://Sprites/Icons/{Game.TechData[techType].ImagePath}.svg";
-        var textureRect = GetNode<TextureRect>("TextureRect");
+        nodeState = state;
 
-        textureRect.Texture = GD.Load<Texture2D>(imagePath);
-    }
+        switch (state)
+        {
+            case TechNodeState.Locked:
+                textureRect.Modulate = LockedColour;
+                break;
 
-    void AnimateScale(float scale, int zindex, double duration = 0.1)
-    {
-        ZIndex = zindex;
+            case TechNodeState.Unlocked:
+                textureRect.Modulate = Colors.White;
+                break;
 
-        tweenScale = new GTween(this);
-        tweenScale.Animate("scale", Vector2.One * scale, duration)
-            .SetTrans(Tween.TransitionType.Sine);
+            case TechNodeState.Learned:
+                textureRect.Modulate = LearnedColour;
+                break;
+        }
     }
 
     public void Deactivate()
@@ -56,7 +70,30 @@ public partial class UITechNode : Control
             duration: 0.2);
     }
 
+    void AnimateScale(float scale, int zindex, double duration = 0.1)
+    {
+        ZIndex = zindex;
+
+        tweenScale = new GTween(this);
+        tweenScale.Animate("scale", Vector2.One * scale, duration)
+            .SetTrans(Tween.TransitionType.Sine);
+    }
+
     /// Signal Handlers ///
+
+    public void OnLearnStateChanged(TechDataService service, StringName id, bool isLearned)
+    {
+        if (nodeState == TechNodeState.Learned)
+            return;
+
+        bool isUnlocked = service.IsUnlocked(info.Id);
+        SetLearnState(isUnlocked ? TechNodeState.Unlocked : TechNodeState.Locked);
+
+        if (info.Id != id || !isLearned)
+            return;
+
+        SetLearnState(TechNodeState.Learned);
+    }
 
     private void OnHoverEnter()
     {
@@ -92,7 +129,7 @@ public partial class UITechNode : Control
         UITech.TechNodeActive = true;
 
         AnimateScale(
-            scale: 2,
+            scale: 1.5f,
             zindex: 100,
             duration: 0.2
         );
@@ -102,4 +139,11 @@ public partial class UITechNode : Control
 
         GetViewport().SetInputAsHandled();
     }
+}
+
+public enum TechNodeState
+{
+    Locked,
+    Unlocked,
+    Learned
 }

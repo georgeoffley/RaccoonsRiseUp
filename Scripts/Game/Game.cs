@@ -5,9 +5,11 @@ using Newtonsoft.Json;
 public partial class Game : Node
 {
     public static int Raccoons { get; set; } = 30;
-    
+
     public static event Action<Dictionary<ResourceType, double>> ResourcesChanged;
     public static event Action<Dictionary<JobType, int>> JobsChanged;
+
+    [Export] TechDataService techData;
 
     [Export] UIInfo pageInfo;
     [Export] UIJobs pageJobs;
@@ -30,40 +32,6 @@ public partial class Game : Node
         { StructureType.ResearchCamp, 0 }
     };
 
-    public static void SaveGame()
-    {
-        var saveData = new SaveData
-        {
-            Raccoons = Raccoons,
-            NumJobs = numJobs,
-            NumResources = numResources,
-            NumStructures = numStructures
-        };
-
-        var content = JsonConvert.SerializeObject(saveData, Formatting.Indented);
-
-        using var file = FileAccess.Open("user://save_game.dat", FileAccess.ModeFlags.Write);
-        file.StoreString(content);
-    }
-
-    public static void LoadGame()
-    {
-        if (!FileAccess.FileExists("user://save_game.dat"))
-            return;
-
-        using var file = FileAccess.Open("user://save_game.dat", FileAccess.ModeFlags.Read);
-        string content = file.GetAsText();
-
-        var saveData = JsonConvert.DeserializeObject<SaveData>(content);
-        Raccoons = saveData.Raccoons;
-        numJobs = saveData.NumJobs;
-        numResources = saveData.NumResources;
-        numStructures = saveData.NumStructures;
-
-        ResourcesChanged?.Invoke(numResources);
-        JobsChanged?.Invoke(numJobs);
-    }
-
     public override void _Ready()
     {
         LoadGame();
@@ -82,6 +50,50 @@ public partial class Game : Node
             numJobs[job]--;
             Raccoons++;
         };
+
+        GetNode<Global>(Global.GetNodePath)
+            .OnQuitRequest += SaveGame;
+    }
+
+    public void SaveGame()
+    {
+        var saveData = new SaveData
+        {
+            Raccoons = Raccoons,
+            NumJobs = numJobs,
+            NumResources = numResources,
+            NumStructures = numStructures,
+            LearnedUpgrades = techData.Serialise()
+        };
+
+        var content = JsonConvert.SerializeObject(saveData, Formatting.Indented);
+
+        using var file = FileAccess.Open("user://save_game.dat", FileAccess.ModeFlags.Write);
+        file.StoreString(content);
+        file.Close();
+    }
+
+    public void LoadGame()
+    {
+        if (!FileAccess.FileExists("user://save_game.dat"))
+            return;
+
+        using var file = FileAccess.Open("user://save_game.dat", FileAccess.ModeFlags.Read);
+        string content = file.GetAsText();
+
+        var saveData = JsonConvert.DeserializeObject<SaveData>(content);
+        Raccoons = saveData.Raccoons;
+        numJobs = saveData.NumJobs;
+        numResources = saveData.NumResources;
+        numStructures = saveData.NumStructures;
+
+        if (saveData.LearnedUpgrades != null)
+        {
+            techData.Deserialise(saveData.LearnedUpgrades);
+        }
+
+        ResourcesChanged?.Invoke(numResources);
+        JobsChanged?.Invoke(numJobs);
     }
 
     public override void _PhysicsProcess(double delta)

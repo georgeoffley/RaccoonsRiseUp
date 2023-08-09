@@ -58,6 +58,7 @@ public partial class UIPopupMenu : Control
 
     private void _on_quit_pressed()
     {
-        Global.Quit();
+        GetNode<Global>(Global.GetNodePath)
+            .Quit();
     }
 }

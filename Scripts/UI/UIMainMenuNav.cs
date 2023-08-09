@@ -27,7 +27,8 @@ public partial class UIMainMenuNav : Node
 
     private void _on_quit_pressed()
     {
-        Global.Quit();
+        GetNode<Global>(Global.GetNodePath)
+            .Quit();
     }
 
     private void _on_discord_pressed() =>

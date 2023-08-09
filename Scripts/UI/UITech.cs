@@ -4,6 +4,7 @@ public partial class UITech : SubViewport
 {
     [Export] int techNodeSpacing;
 
+    [Export] TechDataService techData;
     [Export] TechNodeDetails detailsView;
 
     public static bool TechNodeActive { get; set; }
@@ -18,7 +19,7 @@ public partial class UITech : SubViewport
         camera = GetNode<Camera2D>("Camera2D");
 
         CreateTransparentOverlay();
-        AddTechNodes();
+        CallDeferred(MethodName.AddTechNodes);
 
         UITechNode.ClickedOnNode += techNodePos =>
         {
@@ -75,11 +76,19 @@ public partial class UITech : SubViewport
 
     void AddTechNodes()
     {
-        for (int x = 0; x < 4; x++)
-            AddTech(TechType.WoodEffeciency, x, 0);
+        ReadOnlySpan<TechUpgradeInfo> upgrades = default;
+        techData.GetAllUpgrades(ref upgrades);
 
-        AddTech(TechType.ResearchEffeciency, 0, -1);
-        AddTech(TechType.ResearchEffeciency, 1, -1);
+        for (int i = 0; i < upgrades.Length; ++ i)
+        {
+            AddTech(
+                id: upgrades[i].Id,
+                modifier: upgrades[i].Modifier,
+                techType: upgrades[i].UpgradeType,
+                x: upgrades[i].Position.X,
+                y: upgrades[i].Position.Y
+            );
+        }
     }
 
     void CreateTransparentOverlay()
@@ -112,15 +121,19 @@ public partial class UITech : SubViewport
         CallDeferred(MethodName.HideDetails);
     }
 
-    void AddTech(TechType techType, int x, int y)
+    void AddTech(StringName id, float modifier, TechType techType, int x, int y)
     {
         var techNode = Prefabs.TechNode.Instantiate<UITechNode>();
-        techNode.Setup(TechNodeInfo.FromType(techType));
+        TechInfo techInfo = TechInfo.FromType(id, modifier, techType);
+
         AddChild(techNode);
         techNodes.Add(techNode);
 
         // Open the details view when a tech node has been activated
         techNode.ShowDetailRequest += detailsView.OnShowDetailRequested;
+        techData.LearnStateUpdated += techNode.OnLearnStateChanged;
+
+        techNode.CallDeferred(UITechNode.MethodName.Setup, techInfo);
 
         // Must do this after AddChild(...) otherwise techNode.Size will
         // not be accurate
@@ -129,6 +142,17 @@ public partial class UITech : SubViewport
 
         techNode.Position =
             new Vector2(x, y) * (techNode.Size + spacing) - offset;
+
+        // Set node state
+        TechNodeState nodeState = techData.IsLearned(id) ? TechNodeState.Learned : TechNodeState.Locked;
+
+        if (nodeState == TechNodeState.Locked &&
+            techData.IsUnlocked(id))
+        {
+            nodeState = TechNodeState.Unlocked;
+        }
+
+        techNode.CallDeferred(UITechNode.MethodName.SetLearnState, (int) nodeState);
     }
 
     void HideDetails()
