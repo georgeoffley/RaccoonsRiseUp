@@ -4,6 +4,8 @@ public partial class UITech : SubViewport
 {
     [Export] int techNodeSpacing;
 
+    [Export] TechNodeDetails detailsView;
+
     public static bool TechNodeActive { get; set; }
 
     Camera2D camera;
@@ -78,10 +80,6 @@ public partial class UITech : SubViewport
 
         AddTech(TechType.ResearchEffeciency, 0, -1);
         AddTech(TechType.ResearchEffeciency, 1, -1);
-
-        foreach (var techNode in techNodes)
-            // This needs to be done after all tech nodes are added to the scene
-            techNode.CreateDescriptionLabel();
     }
 
     void CreateTransparentOverlay()
@@ -110,22 +108,36 @@ public partial class UITech : SubViewport
 
         tweenOverlayColor = new GTween(overlay);
         tweenOverlayColor.Animate("color", new Color(0, 0, 0, 0), 0.2);
+
+        CallDeferred(MethodName.HideDetails);
     }
 
     void AddTech(TechType techType, int x, int y)
     {
         var techNode = Prefabs.TechNode.Instantiate<UITechNode>();
-        techNode.Setup(techType);
+        techNode.Setup(TechNodeInfo.FromType(techType));
         AddChild(techNode);
         techNodes.Add(techNode);
+
+        // Open the details view when a tech node has been activated
+        techNode.ShowDetailRequest += detailsView.OnShowDetailRequested;
 
         // Must do this after AddChild(...) otherwise techNode.Size will
         // not be accurate
         var offset = techNode.Size / 2;
         var spacing = Vector2.One * techNodeSpacing;
 
-        techNode.Position = 
+        techNode.Position =
             new Vector2(x, y) * (techNode.Size + spacing) - offset;
+    }
+
+    void HideDetails()
+    {
+        // No need to hide the details view if the user only switches context
+        if (IsInstanceValid(FindActiveTechNode()))
+            return;
+
+        detailsView.OnHideRequested();
     }
 
     /*public override void _Draw()

@@ -2,98 +2,32 @@ namespace RRU;
 
 public partial class UITechNode : Control
 {
+    private const int DescriptionFontSize = 32;
+    private const int DescriptionOffset = 125;
+
     public static event Action<Vector2> ClickedOnNode;
+
+    [Signal]
+    public delegate void ShowDetailRequestEventHandler(TechNodeInfo info);
 
     public bool IsActive { get; set; }
 
-    TechType techType;
     GTween tweenScale;
-    GTween tweenLabelColor;
-    Label label;
+    TechNodeInfo info;
 
     public override void _Ready()
     {
         PivotOffset += Size / 2;
 
-        MouseEntered += () =>
-        {
-            if (UITech.TechNodeActive)
-                return;
-
-            AnimateScale(1.05f, 
-                zindex: 100, 
-                duration: 0.1);
-        };
-
-        MouseExited += () =>
-        {
-            if (UITech.TechNodeActive)
-                return;
-
-            AnimateScale(1, 
-                zindex: 0, 
-                duration: 0.1);
-        };
-
-        GuiInput += input =>
-        {
-            if (input is InputEventMouseButton mouse)
-            {
-                if (!UITech.TechNodeActive)
-                {
-                    if (mouse.IsLeftClickPressed())
-                    {
-                        IsActive = true;
-                        UITech.TechNodeActive = true;
-
-                        AnimateScale(2,
-                            zindex: 100,
-                            duration: 0.2);
-
-                        ClickedOnNode?.Invoke(Position + Size / 2);
-
-                        tweenLabelColor = new GTween(label);
-                        tweenLabelColor.AnimateColor(new Color(1, 1, 1, 1), 0.3, true);
-                        label.Show();
-                    }
-                }
-            }
-        };
+        MouseEntered += OnHoverEnter;
+        MouseExited += OnHoverExit;
+        GuiInput += OnGuiInput;
     }
 
-    public void CreateDescriptionLabel()
+    public void Setup(TechNodeInfo info)
     {
-        var fontSize = 32;
-        var techDesc = Game.TechData[techType].Description;
-        label = new GLabel(techDesc, fontSize);
-        label.Modulate = new Color(1, 1, 1, 0);
-        label.ZIndex = 100;
-        GetParent().AddChild(label);
-
-        var offset = 125;
-        var pos = Position;
-        pos.X += Size.X + offset;
-        pos.Y += Size.Y / 2 - fontSize;
-        label.Position = pos;
-        label.Hide();
-    }
-
-    public void Deactivate()
-    {
-        ZIndex = 0;
-        label.Hide();
-        tweenLabelColor?.Kill();
-        label.Modulate = new Color(1, 1, 1, 0);
-
-        AnimateScale(1,
-            zindex: 0,
-            duration: 0.2);
-    }
-
-    public void Setup(TechType techType)
-    {
-        this.techType = techType;
-        SetImage(techType);
+        this.info = info;
+        SetImage(this.info.Type);
     }
 
     void SetImage(TechType techType)
@@ -111,5 +45,61 @@ public partial class UITechNode : Control
         tweenScale = new GTween(this);
         tweenScale.Animate("scale", Vector2.One * scale, duration)
             .SetTrans(Tween.TransitionType.Sine);
+    }
+
+    public void Deactivate()
+    {
+        ZIndex = 0;
+
+        AnimateScale(1,
+            zindex: 0,
+            duration: 0.2);
+    }
+
+    /// Signal Handlers ///
+
+    private void OnHoverEnter()
+    {
+        if (UITech.TechNodeActive)
+            return;
+
+        AnimateScale(1.05f,
+            zindex: 100,
+            duration: 0.1);
+    }
+
+    private void OnHoverExit()
+    {
+        if (UITech.TechNodeActive)
+            return;
+
+        AnimateScale(1,
+            zindex: 0,
+            duration: 0.1);
+    }
+
+    private void OnGuiInput(InputEvent @event)
+    {
+        if (IsActive ||
+            @event is not InputEventMouseButton mouse ||
+            UITech.TechNodeActive ||
+            !mouse.IsLeftClickPressed())
+        {
+            return;
+        }
+
+        IsActive = true;
+        UITech.TechNodeActive = true;
+
+        AnimateScale(
+            scale: 2,
+            zindex: 100,
+            duration: 0.2
+        );
+
+        ClickedOnNode?.Invoke(Position + Size / 2);
+        EmitSignal(SignalName.ShowDetailRequest, info);
+
+        GetViewport().SetInputAsHandled();
     }
 }
