@@ -13,7 +13,7 @@ public partial class TechCameraController : Node
     [Export(PropertyHint.Range, "0.02, 0.16")] 
     private float ZoomIncrementDefault { get; set; } = 0.02f;
 
-    [Export(PropertyHint.Range, "0.01, 1")] 
+    [Export(PropertyHint.Range, "0.01, 10")] 
     private float MinZoom { get; set; } = 0.01f;
 
     [Export(PropertyHint.Range, "0.1, 10")] 
@@ -33,6 +33,11 @@ public partial class TechCameraController : Node
     public override void _Ready()
     {
         camera = GetParent<Camera2D>();
+
+        // Make sure the camera zoom does not go past MinZoom
+        // Note that a higher MinZoom value means the camera can zoom out more
+        var maxZoom = Mathf.Max(camera.Zoom.X, MinZoom);
+        camera.Zoom = Vector2.One * maxZoom;
 
         // Set the initial target zoom value on game start
         targetZoom = camera.Zoom.X;
