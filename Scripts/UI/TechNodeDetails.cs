@@ -2,8 +2,8 @@ namespace RRU;
 
 public sealed partial class TechNodeDetails : Control
 {
-    const string TEXT_STATUS_LEARNED = "Learned";
-    const string TEXT_STATUS_NOT_LEARNED = "Not Learned";
+    const string TEXT_STATUS_RESEARCHED = "Researched";
+    const string TEXT_STATUS_NOT_RESEARCHED = "Not Researched";
 
     const string TEXT_REQUIRED_SINGULAR = "Required Upgrade";
     const string TEXT_REQUIRED_PLURAL = "Required Upgrades";
@@ -50,7 +50,7 @@ public sealed partial class TechNodeDetails : Control
         bool isLocked = !dataService.IsUnlocked(info?.Id);
 
         buttonLearn.Disabled = isLearned || isLocked;
-        labelStatus.Text = isLearned ? TEXT_STATUS_LEARNED : TEXT_STATUS_NOT_LEARNED;
+        labelStatus.Text = isLearned ? TEXT_STATUS_RESEARCHED : TEXT_STATUS_NOT_RESEARCHED;
     }
 
     void UpdateDetails()
