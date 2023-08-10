@@ -37,20 +37,18 @@ public partial class Global : Node
 	}
 
     public override void _Notification(int what)
-	{
-		if (what != NotificationWMCloseRequest)
-			return;
+    {
+	    if (what == NotificationWMCloseRequest)
+            Quit();
+    }
 
-		CallDeferred(MethodName.Quit);
-	}
-
-	public void Quit()
-	{
+    public void Quit()
+    {
         // Handle cleanup here
         OptionsManager.SaveOptions();
         OptionsManager.SaveHotkeys();
 
-		EmitSignal(SignalName.OnQuitRequest);
-        GetTree().CallDeferred(SceneTree.MethodName.Quit);
-	}
+	    EmitSignal(SignalName.OnQuitRequest);
+        GetTree().Quit();
+    }
 }
