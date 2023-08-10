@@ -235,7 +235,6 @@ pageJobs = NodePath("TabContainer/Jobs")
 layout_mode = 2
 
 [node name="Info" parent="TabContainer" instance=ExtResource("1_lxhla")]
-visible = false
 layout_mode = 2
 
 [node name="Jobs" parent="TabContainer" instance=ExtResource("2_vouy1")]
@@ -243,6 +242,7 @@ visible = false
 layout_mode = 2
 
 [node name="Tech" type="HSplitContainer" parent="TabContainer"]
+visible = false
 layout_mode = 2
 dragger_visibility = 2
 
@@ -257,8 +257,8 @@ stretch = true
 
 [node name="SubViewport" type="SubViewport" parent="TabContainer/Tech/HSplitContainer/Canvas" node_paths=PackedStringArray("detailsView")]
 handle_input_locally = false
-size = Vector2i(1152, 617)
-render_target_update_mode = 4
+size = Vector2i(2, 2)
+render_target_update_mode = 0
 script = ExtResource("4_ymnje")
 techNodeSpacing = 30
 techData = ExtResource("5_g65f1")
