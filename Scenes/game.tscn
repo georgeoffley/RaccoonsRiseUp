@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://c3vhl3m2xg1jg"]
+[gd_scene load_steps=13 format=3 uid="uid://c3vhl3m2xg1jg"]
 
 [ext_resource type="Script" path="res://Scripts/Game/Game.cs" id="1_i188o"]
 [ext_resource type="PackedScene" uid="uid://lv08ttqpvfes" path="res://Scenes/info.tscn" id="1_lxhla"]
@@ -242,7 +242,6 @@ visible = false
 layout_mode = 2
 
 [node name="Tech" type="HSplitContainer" parent="TabContainer"]
-visible = false
 layout_mode = 2
 dragger_visibility = 2
 
@@ -251,14 +250,13 @@ layout_mode = 2
 size_flags_horizontal = 3
 stretch = true
 
-[node name="SubViewport" type="SubViewport" parent="TabContainer/Tech/Canvas" node_paths=PackedStringArray("detailsView")]
+[node name="SubViewport" type="SubViewport" parent="TabContainer/Tech/Canvas"]
 handle_input_locally = false
 size = Vector2i(1152, 617)
-render_target_update_mode = 0
+render_target_update_mode = 4
 script = ExtResource("4_ymnje")
 techNodeSpacing = 30
 techData = ExtResource("5_g65f1")
-detailsView = NodePath("../../TechNodeInfo")
 
 [node name="Camera2D" type="Camera2D" parent="TabContainer/Tech/Canvas/SubViewport"]
 
@@ -269,14 +267,15 @@ ZoomIncrementDefault = 0.1
 MinZoom = 0.4
 
 [node name="World" type="SubViewportContainer" parent="TabContainer"]
+visible = false
 layout_mode = 2
 stretch = true
 
 [node name="SubViewport" type="SubViewport" parent="TabContainer/World"]
 handle_input_locally = false
 canvas_item_default_texture_filter = 0
-size = Vector2i(1152, 617)
-render_target_update_mode = 4
+size = Vector2i(2, 2)
+render_target_update_mode = 0
 script = ExtResource("6_ub1nu")
 
 [node name="Grass" type="TileMap" parent="TabContainer/World/SubViewport"]
