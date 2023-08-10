@@ -8,11 +8,8 @@ public sealed partial class TechNodeDetails : Control
     const string TEXT_REQUIRED_SINGULAR = "Required Upgrade";
     const string TEXT_REQUIRED_PLURAL = "Required Upgrades";
 
-    [Export]
-    TechDataService dataService;
-
-    [Export]
-    HSplitContainer splitView;
+    [Export] TechDataService dataService;
+    [Export] HSplitContainer splitView;
 
     Tween tween;
 
