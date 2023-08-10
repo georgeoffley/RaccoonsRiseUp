@@ -24,8 +24,6 @@ public partial class Global : Node
 
 	public override void _Ready()
 	{
-		GetTree().AutoAcceptQuit = false;
-
 		// For 'CommandExit' to work
 		QuitAction = Quit;
 
