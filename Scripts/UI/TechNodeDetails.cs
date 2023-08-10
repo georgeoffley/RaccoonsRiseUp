@@ -2,9 +2,6 @@ namespace RRU;
 
 public sealed partial class TechNodeDetails : Control
 {
-    const string TEXT_REQUIRED_SINGULAR = "Required Upgrade";
-    const string TEXT_REQUIRED_PLURAL = "Required Upgrades";
-
     [Export] TechDataService dataService;
     [Export] HSplitContainer splitView;
 
@@ -68,7 +65,8 @@ public sealed partial class TechNodeDetails : Control
                 .QueueFree();
         }
 
-        prerequisiteLabel.Text = requirements.Length > 1 ? TEXT_REQUIRED_PLURAL : TEXT_REQUIRED_SINGULAR;
+        prerequisiteLabel.Text = requirements.Length > 1 ? 
+            "Required Upgrades" : "Required Upgrade";
 
         // Update requirements
         for (int i = 0; i < requirements.Length; ++ i)
