@@ -29,6 +29,10 @@ public sealed partial class TechInfo : RefCounted
             Type = type
         };
 
+        // Casting to ReadOnlySpan<TechType> because based on previous
+        // experience, Iterating on spans are a lot faster than other
+        // collection types. Plus you get to use the standard C-style
+        // iterator since you're not dealing with an enumerator anymore.
         ReadOnlySpan<TechType> types = Game.TechData.Keys.ToArray();
 
         for (int i = 0; i < types.Length; ++ i)
