@@ -116,8 +116,6 @@ public sealed partial class TechDataService : Resource
         researchedUpgrades.Clear();
 
         for (int i = 0; i < ids.Length; ++ i)
-        {
             researchedUpgrades.Add(ids[i]);
-        }
     }
 }
