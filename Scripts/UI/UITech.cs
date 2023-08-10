@@ -54,8 +54,9 @@ public partial class UITech : SubViewport
                 return;
 
             UITechNode activeTechNode = FindActiveTechNode();
+            Vector2 globalMousePos = activeTechNode.GetGlobalMousePosition();
 
-            if (!activeTechNode.GetRect().HasPoint(activeTechNode.GetGlobalMousePosition()))
+            if (!activeTechNode.GetRect().HasPoint(globalMousePos))
             {
                 // Clicked outside of active tech node
                 DeactivateTechNode(activeTechNode);
@@ -144,15 +145,14 @@ public partial class UITech : SubViewport
             new Vector2(x, y) * (techNode.Size + spacing) - offset;
 
         // Set node state
-        TechNodeState nodeState = techData.IsResearched(id) ? TechNodeState.Researched : TechNodeState.Locked;
+        TechNodeState nodeState = techData.IsResearched(id) ? 
+            TechNodeState.Researched : TechNodeState.Locked;
 
-        if (nodeState == TechNodeState.Locked &&
-            techData.IsUnlocked(id))
-        {
+        if (nodeState == TechNodeState.Locked && techData.IsUnlocked(id))
             nodeState = TechNodeState.Unlocked;
-        }
 
-        techNode.CallDeferred(UITechNode.MethodName.SetResearchState, (int) nodeState);
+        techNode.CallDeferred(
+            UITechNode.MethodName.SetResearchState, (int)nodeState);
     }
 
     void HideDetails()
@@ -163,10 +163,4 @@ public partial class UITech : SubViewport
 
         detailsView.OnHideRequested();
     }
-
-    /*public override void _Draw()
-    {
-        DrawLine(new Vector2(-1000, 0), new Vector2(1000, 0), Colors.White, 2);
-        DrawLine(new Vector2(0, -1000), new Vector2(0, 1000), Colors.White, 2);
-    }*/
 }
