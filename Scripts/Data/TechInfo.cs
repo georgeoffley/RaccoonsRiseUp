@@ -3,6 +3,9 @@ namespace RRU;
 /// <summary>
 /// A TechInfo represents an instance of TechData with its own modifiers
 /// </summary>
+
+// RefCounted can be used with Godot methods, unlike regular C# 'object'
+// classes. (e.g. you can use it in signals.)
 public sealed partial class TechInfo : RefCounted
 {
     public StringName Id { get; private set; }
