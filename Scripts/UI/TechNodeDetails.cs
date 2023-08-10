@@ -76,11 +76,7 @@ public sealed partial class TechNodeDetails : Control
                 dataService.GetInfoForId(requirements[i]);
 
             requirementsView.AddChild(
-                new Label()
-                {
-                    Text = $"* {requirementInfo.DisplayName}"
-                }
-            );
+                new GLabel($"* {requirementInfo.DisplayName}"));
         }
     }
 
