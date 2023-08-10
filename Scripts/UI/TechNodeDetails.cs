@@ -58,6 +58,7 @@ public sealed partial class TechNodeDetails : Control
             return;
 
         // Clear requirements
+        // Iterate from count to zero
         for (int i = requirementsView.GetChildCount(); i --> 0;)
         {
             requirementsView
