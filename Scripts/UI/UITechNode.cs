@@ -4,7 +4,7 @@ public partial class UITechNode : Control
 {
     public static event Action<Vector2> ClickedOnNode;
 
-    static Color LEARNED_COLOUR => new(0.3f, 1.0f, 0.3f, 0.5f);
+    static Color RESEARCHED_COLOUR => new(0.3f, 1.0f, 0.3f, 0.5f);
     static Color LOCKED_COLOUR => new(1.0f, 0.3f, 0.3f, 0.35f);
 
     const int DESCRIPTION_FONT_SIZE = 32;
@@ -37,7 +37,7 @@ public partial class UITechNode : Control
         textureRect.Texture = info.Data.GetImage();
     }
 
-    public void SetLearnState(TechNodeState state)
+    public void SetResearchState(TechNodeState state)
     {
         nodeState = state;
 
@@ -51,8 +51,8 @@ public partial class UITechNode : Control
                 textureRect.Modulate = Colors.White;
                 break;
 
-            case TechNodeState.Learned:
-                textureRect.Modulate = LEARNED_COLOUR;
+            case TechNodeState.Researched:
+                textureRect.Modulate = RESEARCHED_COLOUR;
                 break;
         }
     }
@@ -77,18 +77,18 @@ public partial class UITechNode : Control
 
     /// Signal Handlers ///
 
-    public void OnLearnStateChanged(TechDataService service, StringName id, bool isLearned)
+    public void OnResearchStateChanged(TechDataService service, StringName id, bool isResearched)
     {
-        if (nodeState == TechNodeState.Learned)
+        if (nodeState == TechNodeState.Researched)
             return;
 
         bool isUnlocked = service.IsUnlocked(info.Id);
-        SetLearnState(isUnlocked ? TechNodeState.Unlocked : TechNodeState.Locked);
+        SetResearchState(isUnlocked ? TechNodeState.Unlocked : TechNodeState.Locked);
 
-        if (info.Id != id || !isLearned)
+        if (info.Id != id || !isResearched)
             return;
 
-        SetLearnState(TechNodeState.Learned);
+        SetResearchState(TechNodeState.Researched);
     }
 
     void OnHoverEnter()
@@ -141,5 +141,5 @@ public enum TechNodeState
 {
     Locked,
     Unlocked,
-    Learned
+    Researched
 }

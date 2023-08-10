@@ -6,40 +6,38 @@ public sealed partial class TechDataService : Resource
     const int MaxUpgrades = 128;
 
     [Signal]
-    public delegate void LearnStateUpdatedEventHandler(TechDataService service, StringName id, bool isLearned);
+    public delegate void ResearchStateUpdatedEventHandler(TechDataService service, StringName id, bool isResearched);
 
     // Note that renaming this will cause the resource to get reset
     // Not worth the hassle
     [Export] TechUpgradeInfo[] _upgrades;
 
-    readonly HashSet<StringName> learnedUpgrades;
+    readonly HashSet<StringName> researchedUpgrades;
 
     public TechDataService()
     {
-        learnedUpgrades = new();
+        researchedUpgrades = new();
     }
 
     /// Upgrades ///
 
-    public void Learn(StringName id)
+    public void Research(StringName id)
     {
-        learnedUpgrades.Add(id);
-        EmitSignal(SignalName.LearnStateUpdated, this, id, true);
+        researchedUpgrades.Add(id);
+        EmitSignal(SignalName.ResearchStateUpdated, this, id, true);
     }
 
-    public void Unlearn(StringName id)
+    public void Unresearch(StringName id)
     {
-        if (!learnedUpgrades.Contains(id))
+        if (!researchedUpgrades.Contains(id))
             return;
 
-        learnedUpgrades.Remove(id);
-        EmitSignal(SignalName.LearnStateUpdated, this, id, false);
+        researchedUpgrades.Remove(id);
+        EmitSignal(SignalName.ResearchStateUpdated, this, id, false);
     }
 
-    public bool IsLearned(StringName id)
-    {
-        return learnedUpgrades.Contains(id);
-    }
+    public bool IsResearched(StringName id) => 
+        researchedUpgrades.Contains(id);
 
     public bool IsUnlocked(StringName id)
     {
@@ -57,7 +55,7 @@ public sealed partial class TechDataService : Resource
 
         for (int i = 0; i < prerequisiteIds.Length; ++ i)
         {
-            if (IsLearned(prerequisiteIds[i]))
+            if (IsResearched(prerequisiteIds[i]))
                 continue;
 
             return false;
@@ -89,15 +87,12 @@ public sealed partial class TechDataService : Resource
         return null;
     }
 
-    public void Reset()
-    {
-        learnedUpgrades.Clear();
-    }
+    public void Reset() => researchedUpgrades.Clear();
 
     /// Serialisation ///
 
     /// <summary>
-    /// Returns an array containing all currently-learned upgrade options.
+    /// Returns an array containing all currently-researched upgrade options.
     /// </summary>
     /// <returns></returns>
     public string[] Serialise()
@@ -105,7 +100,7 @@ public sealed partial class TechDataService : Resource
         Span<string> upgrades = new string[MaxUpgrades];
         int upgradeIdx = 0;
 
-        foreach (StringName id in learnedUpgrades)
+        foreach (StringName id in researchedUpgrades)
         {
             upgrades[upgradeIdx] = id;
             upgradeIdx ++;
@@ -118,11 +113,11 @@ public sealed partial class TechDataService : Resource
     {
         ReadOnlySpan<string> ids = serialisedArray;
 
-        learnedUpgrades.Clear();
+        researchedUpgrades.Clear();
 
         for (int i = 0; i < ids.Length; ++ i)
         {
-            learnedUpgrades.Add(ids[i]);
+            researchedUpgrades.Add(ids[i]);
         }
     }
 }

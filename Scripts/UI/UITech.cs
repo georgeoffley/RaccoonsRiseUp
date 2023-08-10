@@ -131,7 +131,7 @@ public partial class UITech : SubViewport
 
         // Open the details view when a tech node has been activated
         techNode.ShowDetailRequest += detailsView.OnShowDetailRequested;
-        techData.LearnStateUpdated += techNode.OnLearnStateChanged;
+        techData.ResearchStateUpdated += techNode.OnResearchStateChanged;
 
         techNode.CallDeferred(UITechNode.MethodName.Setup, techInfo);
 
@@ -144,7 +144,7 @@ public partial class UITech : SubViewport
             new Vector2(x, y) * (techNode.Size + spacing) - offset;
 
         // Set node state
-        TechNodeState nodeState = techData.IsLearned(id) ? TechNodeState.Learned : TechNodeState.Locked;
+        TechNodeState nodeState = techData.IsResearched(id) ? TechNodeState.Researched : TechNodeState.Locked;
 
         if (nodeState == TechNodeState.Locked &&
             techData.IsUnlocked(id))
@@ -152,7 +152,7 @@ public partial class UITech : SubViewport
             nodeState = TechNodeState.Unlocked;
         }
 
-        techNode.CallDeferred(UITechNode.MethodName.SetLearnState, (int) nodeState);
+        techNode.CallDeferred(UITechNode.MethodName.SetResearchState, (int) nodeState);
     }
 
     void HideDetails()

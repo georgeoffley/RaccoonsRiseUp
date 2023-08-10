@@ -11,7 +11,7 @@ public sealed partial class TechNodeDetails : Control
     Label labelType;
     Label labelDescription;
     Label labelStatus;
-    Button buttonLearn;
+    Button buttonResearch;
 
     Control prerequisiteView;
     Label prerequisiteLabel;
@@ -26,25 +26,25 @@ public sealed partial class TechNodeDetails : Control
         prerequisiteView = GetNode<Control>("%Prerequisites");
         requirementsView = GetNode<Control>("%Requirements");
         labelDescription = GetNode<Label>("%Description");
-        labelStatus = GetNode<Label>("%LearnState");
+        labelStatus = GetNode<Label>("%ResearchState");
         icon = GetNode<TextureRect>("%Icon");
         labelType = GetNode<Label>("%Type");
 
-        buttonLearn = GetNode<Button>("%BtnLearn");
-        buttonLearn.Pressed += OnResearchPressed;
+        buttonResearch = GetNode<Button>("%BtnResearch");
+        buttonResearch.Pressed += OnResearchPressed;
 
-        SetLearnState(false);
+        SetResearchState(false);
         Modulate = Colors.Transparent;
     }
 
     /// Helpers ///
 
-    void SetLearnState(bool isLearned)
+    void SetResearchState(bool isResearched)
     {
         bool isLocked = !dataService.IsUnlocked(info?.Id);
 
-        buttonLearn.Disabled = isLearned || isLocked;
-        labelStatus.Text = isLearned ? Tr("RESEARCHED") : Tr("NOT_RESEARCHED");
+        buttonResearch.Disabled = isResearched || isLocked;
+        labelStatus.Text = isResearched ? Tr("RESEARCHED") : Tr("NOT_RESEARCHED");
     }
 
     void UpdateDetails()
@@ -133,7 +133,7 @@ public sealed partial class TechNodeDetails : Control
         labelDescription.Text = info.Data.Description;
         icon.Texture = info.Data.GetImage();
 
-        SetLearnState(dataService.IsLearned(info.Id));
+        SetResearchState(dataService.IsResearched(info.Id));
         UpdateDetails();
     }
 
@@ -144,7 +144,7 @@ public sealed partial class TechNodeDetails : Control
 
     void OnResearchPressed()
     {
-        dataService.Learn(info.Id);
-        SetLearnState(true);
+        dataService.Research(info.Id);
+        SetResearchState(true);
     }
 }
