@@ -2,32 +2,32 @@ namespace RRU;
 
 public sealed partial class TechNodeDetails : Control
 {
-	private const string TextStatusLearned = "Learned";
-	private const string TextStatusNotLearned = "Not Learned";
+	const string TextStatusLearned = "Learned";
+	const string TextStatusNotLearned = "Not Learned";
 
-	private const string TextRequiredSingular = "Required Upgrade";
-	private const string TextRequiredPlural = "Required Upgrades";
-
-	[Export]
-	private TechDataService _dataService;
+	const string TextRequiredSingular = "Required Upgrade";
+	const string TextRequiredPlural = "Required Upgrades";
 
 	[Export]
-	private HSplitContainer _splitView;
+	TechDataService _dataService;
 
-	private Tween _tween;
+	[Export]
+	HSplitContainer _splitView;
 
-	private TextureRect _icon;
-	private Label _labelType;
-	private Label _labelDescription;
-	private Label _labelStatus;
-	private Button _buttonLearn;
+	Tween _tween;
 
-	private Control _prerequisiteView;
-	private Label _prerequisiteLabel;
-	private Control _requirementsView;
+	TextureRect _icon;
+	Label _labelType;
+	Label _labelDescription;
+	Label _labelStatus;
+	Button _buttonLearn;
 
-	private TechInfo _info;
-	private bool _wasVisible;
+	Control _prerequisiteView;
+	Label _prerequisiteLabel;
+	Control _requirementsView;
+
+	TechInfo _info;
+	bool _wasVisible;
 
     public override void _Ready()
     {
@@ -48,7 +48,7 @@ public sealed partial class TechNodeDetails : Control
 
 	/// Helpers ///
 
-	private void SetLearnState(bool isLearned)
+	void SetLearnState(bool isLearned)
 	{
 		bool isLocked = !_dataService.IsUnlocked(_info?.Id);
 
@@ -56,7 +56,7 @@ public sealed partial class TechNodeDetails : Control
 		_labelStatus.Text = isLearned ? TextStatusLearned : TextStatusNotLearned;
 	}
 
-	private void UpdateDetails()
+	void UpdateDetails()
 	{
 		TechUpgradeInfo upgradeInfo = _dataService.GetInfoForId(_info.Id);
 		ReadOnlySpan<string> requirements = upgradeInfo.RequiredUpgradeIds;
@@ -90,7 +90,7 @@ public sealed partial class TechNodeDetails : Control
 		}
 	}
 
-	private void SetVisibility(bool visible)
+	void SetVisibility(bool visible)
 	{
 		// Prevent the tween from repeating the same operation
 		if (_wasVisible == visible)
@@ -154,7 +154,7 @@ public sealed partial class TechNodeDetails : Control
 		SetVisibility(false);
 	}
 
-	private void OnLearnPressed()
+	void OnLearnPressed()
 	{
 		_dataService.Learn(_info.Id);
 		SetLearnState(true);

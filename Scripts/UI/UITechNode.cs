@@ -2,13 +2,13 @@ namespace RRU;
 
 public partial class UITechNode : Control
 {
-    private const int DescriptionFontSize = 32;
-    private const int DescriptionOffset = 125;
+    const int DescriptionFontSize = 32;
+    const int DescriptionOffset = 125;
 
-    private static Color LearnedColour
+    static Color LearnedColour
         => new(0.3f, 1.0f, 0.3f, 0.5f);
 
-    private static Color LockedColour
+    static Color LockedColour
         => new(1.0f, 0.3f, 0.3f, 0.35f);
 
     public static event Action<Vector2> ClickedOnNode;
@@ -16,7 +16,7 @@ public partial class UITechNode : Control
     [Signal]
     public delegate void ShowDetailRequestEventHandler(TechInfo info);
 
-    private TextureRect textureRect;
+    TextureRect textureRect;
 
     public bool IsActive { get; set; }
 
@@ -95,7 +95,7 @@ public partial class UITechNode : Control
         SetLearnState(TechNodeState.Learned);
     }
 
-    private void OnHoverEnter()
+    void OnHoverEnter()
     {
         if (UITech.TechNodeActive)
             return;
@@ -105,7 +105,7 @@ public partial class UITechNode : Control
             duration: 0.1);
     }
 
-    private void OnHoverExit()
+    void OnHoverExit()
     {
         if (UITech.TechNodeActive)
             return;
@@ -115,7 +115,7 @@ public partial class UITechNode : Control
             duration: 0.1);
     }
 
-    private void OnGuiInput(InputEvent @event)
+    void OnGuiInput(InputEvent @event)
     {
         if (IsActive ||
             @event is not InputEventMouseButton mouse ||

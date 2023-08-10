@@ -3,15 +3,15 @@ namespace RRU;
 [GlobalClass]
 public sealed partial class TechDataService : Resource
 {
-	private const int MaxUpgrades = 128;
+	const int MaxUpgrades = 128;
 
 	[Signal]
 	public delegate void LearnStateUpdatedEventHandler(TechDataService service, StringName id, bool isLearned);
 
 	[Export]
-	private TechUpgradeInfo[] _upgrades;
+	TechUpgradeInfo[] _upgrades;
 
-	private readonly HashSet<StringName> _learnedUpgrades;
+	readonly HashSet<StringName> _learnedUpgrades;
 
 	public TechDataService()
 	{
