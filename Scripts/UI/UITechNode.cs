@@ -5,11 +5,8 @@ public partial class UITechNode : Control
     const int DescriptionFontSize = 32;
     const int DescriptionOffset = 125;
 
-    static Color LearnedColour
-        => new(0.3f, 1.0f, 0.3f, 0.5f);
-
-    static Color LockedColour
-        => new(1.0f, 0.3f, 0.3f, 0.35f);
+    static Color LearnedColour => new(0.3f, 1.0f, 0.3f, 0.5f);
+    static Color LockedColour => new(1.0f, 0.3f, 0.3f, 0.35f);
 
     public static event Action<Vector2> ClickedOnNode;
 
