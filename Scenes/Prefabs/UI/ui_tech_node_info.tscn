@@ -74,11 +74,11 @@ alignment = 1
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Not Researched"
+text = "NOT_RESEARCHED"
 
 [node name="BtnLearn" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(80, 33)
 layout_mode = 2
 focus_mode = 0
-text = "Research"
+text = "RESEARCH"
