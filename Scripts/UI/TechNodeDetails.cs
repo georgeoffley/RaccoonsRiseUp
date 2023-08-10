@@ -31,7 +31,7 @@ public sealed partial class TechNodeDetails : Control
         labelType = GetNode<Label>("%Type");
 
         buttonLearn = GetNode<Button>("%BtnLearn");
-        buttonLearn.Pressed += OnLearnPressed;
+        buttonLearn.Pressed += OnResearchPressed;
 
         SetLearnState(false);
         Modulate = Colors.Transparent;
@@ -146,7 +146,7 @@ public sealed partial class TechNodeDetails : Control
         SetVisibility(false);
     }
 
-    void OnLearnPressed()
+    void OnResearchPressed()
     {
         dataService.Learn(info.Id);
         SetLearnState(true);
