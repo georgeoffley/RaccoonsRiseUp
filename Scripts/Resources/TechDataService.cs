@@ -8,35 +8,37 @@ public sealed partial class TechDataService : Resource
     [Signal]
     public delegate void LearnStateUpdatedEventHandler(TechDataService service, StringName id, bool isLearned);
 
+    // Note that renaming this will cause the resource to get reset
+    // Not worth the hassle
     [Export] TechUpgradeInfo[] _upgrades;
 
-    readonly HashSet<StringName> _learnedUpgrades;
+    readonly HashSet<StringName> learnedUpgrades;
 
     public TechDataService()
     {
-        _learnedUpgrades = new();
+        learnedUpgrades = new();
     }
 
     /// Upgrades ///
 
     public void Learn(StringName id)
     {
-        _learnedUpgrades.Add(id);
+        learnedUpgrades.Add(id);
         EmitSignal(SignalName.LearnStateUpdated, this, id, true);
     }
 
     public void Unlearn(StringName id)
     {
-        if (!_learnedUpgrades.Contains(id))
+        if (!learnedUpgrades.Contains(id))
             return;
 
-        _learnedUpgrades.Remove(id);
+        learnedUpgrades.Remove(id);
         EmitSignal(SignalName.LearnStateUpdated, this, id, false);
     }
 
     public bool IsLearned(StringName id)
     {
-        return _learnedUpgrades.Contains(id);
+        return learnedUpgrades.Contains(id);
     }
 
     public bool IsUnlocked(StringName id)
@@ -89,7 +91,7 @@ public sealed partial class TechDataService : Resource
 
     public void Reset()
     {
-        _learnedUpgrades.Clear();
+        learnedUpgrades.Clear();
     }
 
     /// Serialisation ///
@@ -103,7 +105,7 @@ public sealed partial class TechDataService : Resource
         Span<string> upgrades = new string[MaxUpgrades];
         int upgradeIdx = 0;
 
-        foreach (StringName id in _learnedUpgrades)
+        foreach (StringName id in learnedUpgrades)
         {
             upgrades[upgradeIdx] = id;
             upgradeIdx ++;
@@ -116,11 +118,11 @@ public sealed partial class TechDataService : Resource
     {
         ReadOnlySpan<string> ids = serialisedArray;
 
-        _learnedUpgrades.Clear();
+        learnedUpgrades.Clear();
 
         for (int i = 0; i < ids.Length; ++ i)
         {
-            _learnedUpgrades.Add(ids[i]);
+            learnedUpgrades.Add(ids[i]);
         }
     }
 }
