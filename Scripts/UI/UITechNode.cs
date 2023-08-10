@@ -2,21 +2,20 @@ namespace RRU;
 
 public partial class UITechNode : Control
 {
-    const int DescriptionFontSize = 32;
-    const int DescriptionOffset = 125;
-
-    static Color LearnedColour => new(0.3f, 1.0f, 0.3f, 0.5f);
-    static Color LockedColour => new(1.0f, 0.3f, 0.3f, 0.35f);
-
     public static event Action<Vector2> ClickedOnNode;
+
+    static Color LEARNED_COLOUR => new(0.3f, 1.0f, 0.3f, 0.5f);
+    static Color LOCKED_COLOUR => new(1.0f, 0.3f, 0.3f, 0.35f);
+
+    const int DESCRIPTION_FONT_SIZE = 32;
+    const int DESCRIPTION_OFFSET = 125;
 
     [Signal]
     public delegate void ShowDetailRequestEventHandler(TechInfo info);
 
-    TextureRect textureRect;
-
     public bool IsActive { get; set; }
 
+    TextureRect textureRect;
     TechNodeState nodeState;
     GTween tweenScale;
     TechInfo info;
@@ -45,7 +44,7 @@ public partial class UITechNode : Control
         switch (state)
         {
             case TechNodeState.Locked:
-                textureRect.Modulate = LockedColour;
+                textureRect.Modulate = LOCKED_COLOUR;
                 break;
 
             case TechNodeState.Unlocked:
@@ -53,7 +52,7 @@ public partial class UITechNode : Control
                 break;
 
             case TechNodeState.Learned:
-                textureRect.Modulate = LearnedColour;
+                textureRect.Modulate = LEARNED_COLOUR;
                 break;
         }
     }
