@@ -8,8 +8,7 @@ public sealed partial class TechDataService : Resource
     [Signal]
     public delegate void LearnStateUpdatedEventHandler(TechDataService service, StringName id, bool isLearned);
 
-    [Export]
-    TechUpgradeInfo[] _upgrades;
+    [Export] TechUpgradeInfo[] _upgrades;
 
     readonly HashSet<StringName> _learnedUpgrades;
 
