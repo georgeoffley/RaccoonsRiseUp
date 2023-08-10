@@ -88,9 +88,7 @@ public sealed partial class TechNodeDetails : Control
 
         // Stop the currently-running tween (if there is any)
         if (IsInstanceValid(tween) && tween.IsRunning())
-        {
             tween.Kill();
-        }
 
         tween = CreateTween();
         tween.SetParallel(true);
