@@ -272,9 +272,10 @@ Speed = 25.0
 ZoomIncrementDefault = 0.1
 MinZoom = 0.4
 
-[node name="TechNodeInfo" parent="TabContainer/Tech/HSplitContainer" node_paths=PackedStringArray("_splitView") instance=ExtResource("7_xo228")]
+[node name="TechNodeInfo" parent="TabContainer/Tech/HSplitContainer" node_paths=PackedStringArray("splitView") instance=ExtResource("7_xo228")]
 layout_mode = 2
-_splitView = NodePath("..")
+dataService = ExtResource("5_g65f1")
+splitView = NodePath("..")
 
 [node name="World" type="SubViewportContainer" parent="TabContainer"]
 visible = false
