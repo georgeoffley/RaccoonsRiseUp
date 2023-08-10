@@ -9,38 +9,38 @@ public sealed partial class TechNodeDetails : Control
 	const string TextRequiredPlural = "Required Upgrades";
 
 	[Export]
-	TechDataService _dataService;
+	TechDataService dataService;
 
 	[Export]
-	HSplitContainer _splitView;
+	HSplitContainer splitView;
 
-	Tween _tween;
+	Tween tween;
 
-	TextureRect _icon;
-	Label _labelType;
-	Label _labelDescription;
-	Label _labelStatus;
-	Button _buttonLearn;
+	TextureRect icon;
+	Label labelType;
+	Label labelDescription;
+	Label labelStatus;
+	Button buttonLearn;
 
-	Control _prerequisiteView;
-	Label _prerequisiteLabel;
-	Control _requirementsView;
+	Control prerequisiteView;
+	Label prerequisiteLabel;
+	Control requirementsView;
 
-	TechInfo _info;
-	bool _wasVisible;
+	TechInfo info;
+	bool wasVisible;
 
     public override void _Ready()
     {
-		_prerequisiteLabel = GetNode<Label>("%PrerequisiteLabel");
-		_prerequisiteView = GetNode<Control>("%Prerequisites");
-		_requirementsView = GetNode<Control>("%Requirements");
-		_labelDescription = GetNode<Label>("%Description");
-		_labelStatus = GetNode<Label>("%LearnState");
-		_icon = GetNode<TextureRect>("%Icon");
-		_labelType = GetNode<Label>("%Type");
+		prerequisiteLabel = GetNode<Label>("%PrerequisiteLabel");
+		prerequisiteView = GetNode<Control>("%Prerequisites");
+		requirementsView = GetNode<Control>("%Requirements");
+		labelDescription = GetNode<Label>("%Description");
+		labelStatus = GetNode<Label>("%LearnState");
+		icon = GetNode<TextureRect>("%Icon");
+		labelType = GetNode<Label>("%Type");
 
-		_buttonLearn = GetNode<Button>("%BtnLearn");
-		_buttonLearn.Pressed += OnLearnPressed;
+		buttonLearn = GetNode<Button>("%BtnLearn");
+		buttonLearn.Pressed += OnLearnPressed;
 
 		SetLearnState(false);
 		Modulate = Colors.Transparent;
@@ -50,38 +50,38 @@ public sealed partial class TechNodeDetails : Control
 
 	void SetLearnState(bool isLearned)
 	{
-		bool isLocked = !_dataService.IsUnlocked(_info?.Id);
+		bool isLocked = !dataService.IsUnlocked(info?.Id);
 
-		_buttonLearn.Disabled = isLearned || isLocked;
-		_labelStatus.Text = isLearned ? TextStatusLearned : TextStatusNotLearned;
+		buttonLearn.Disabled = isLearned || isLocked;
+		labelStatus.Text = isLearned ? TEXT_STATUS_LEARNED : TEXT_STATUS_NOT_LEARNED;
 	}
 
 	void UpdateDetails()
 	{
-		TechUpgradeInfo upgradeInfo = _dataService.GetInfoForId(_info.Id);
+		TechUpgradeInfo upgradeInfo = dataService.GetInfoForId(info.Id);
 		ReadOnlySpan<string> requirements = upgradeInfo.RequiredUpgradeIds;
 
-		_prerequisiteView.Visible = requirements.Length > 0;
+		prerequisiteView.Visible = requirements.Length > 0;
 
 		if (requirements.Length < 1)
 			return;
 
 		// Clear requirements
-		for (int i = _requirementsView.GetChildCount(); i --> 0;)
+		for (int i = requirementsView.GetChildCount(); i --> 0;)
 		{
-			_requirementsView
+			requirementsView
 				.GetChild(i)
 				.QueueFree();
 		}
 
-		_prerequisiteLabel.Text = requirements.Length > 1 ? TextRequiredPlural : TextRequiredSingular;
+		prerequisiteLabel.Text = requirements.Length > 1 ? TEXT_REQUIRED_PLURAL : TEXT_REQUIRED_SINGULAR;
 
 		// Update requirements
 		for (int i = 0; i < requirements.Length; ++ i)
 		{
-			TechUpgradeInfo requirementInfo = _dataService.GetInfoForId(requirements[i]);
+			TechUpgradeInfo requirementInfo = dataService.GetInfoForId(requirements[i]);
 
-			_requirementsView.AddChild(
+			requirementsView.AddChild(
 				new Label()
 				{
 					Text = $"* {requirementInfo.DisplayName}"
@@ -93,22 +93,22 @@ public sealed partial class TechNodeDetails : Control
 	void SetVisibility(bool visible)
 	{
 		// Prevent the tween from repeating the same operation
-		if (_wasVisible == visible)
+		if (wasVisible == visible)
 			return;
 
 		// Stop the currently-running tween (if there is any)
-		if (IsInstanceValid(_tween) && _tween.IsRunning())
+		if (IsInstanceValid(tween) && tween.IsRunning())
 		{
-			_tween.Kill();
+			tween.Kill();
 		}
 
-		_tween = CreateTween();
-		_tween.SetParallel(true);
-		_wasVisible = visible;
+		tween = CreateTween();
+		tween.SetParallel(true);
+		wasVisible = visible;
 
 		// Slide
-		_tween.TweenProperty(
-			@object: _splitView,
+		tween.TweenProperty(
+			@object: splitView,
 			property: SplitContainer.PropertyName.SplitOffset.ToString(),
 			finalVal: visible ? -300 : 0,
 			duration: 0.25f
@@ -117,7 +117,7 @@ public sealed partial class TechNodeDetails : Control
 		// Fade
 		Modulate = visible ? Colors.Transparent : Colors.White;
 
-		_tween.TweenProperty(
+		tween.TweenProperty(
 			@object: this,
 			property: CanvasItem.PropertyName.Modulate.ToString(),
 			finalVal: visible ? Colors.White : Colors.Transparent,
@@ -135,17 +135,17 @@ public sealed partial class TechNodeDetails : Control
 			return;
 		}
 
-		TechUpgradeInfo upgradeInfo = _dataService.GetInfoForId(id: info.Id);
-		_info = info;
+		TechUpgradeInfo upgradeInfo = dataService.GetInfoForId(id: info.Id);
+		this.info = info;
 
 		SetVisibility(true);
 
-		_labelType.Text = upgradeInfo.DisplayName;
+		labelType.Text = upgradeInfo.DisplayName;
 
-		_labelDescription.Text = info.Data.Description;
-		_icon.Texture = info.Data.GetImage();
+		labelDescription.Text = info.Data.Description;
+		icon.Texture = info.Data.GetImage();
 
-		SetLearnState(_dataService.IsLearned(info.Id));
+		SetLearnState(dataService.IsLearned(info.Id));
 		UpdateDetails();
 	}
 
@@ -156,7 +156,7 @@ public sealed partial class TechNodeDetails : Control
 
 	void OnLearnPressed()
 	{
-		_dataService.Learn(_info.Id);
+		dataService.Learn(info.Id);
 		SetLearnState(true);
 	}
 }
