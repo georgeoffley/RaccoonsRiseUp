@@ -3,13 +3,13 @@ namespace RRU;
 /// <summary>
 /// A TechInfo represents an instance of TechData with its own modifiers
 /// </summary>
-public sealed partial class TechInfo: RefCounted
+public sealed partial class TechInfo : RefCounted
 {
-    public StringName Id;
-    public float Modifier;
+    public StringName Id { get; private set; }
+    public float Modifier { get; private set; }
 
-    public TechData Data;
-    public TechType Type;
+    public TechData Data { get; private set; }
+    public TechType Type { get; private set; }
 
     /// <summary>
     /// Creates a Godot-compatible info object from a given type
