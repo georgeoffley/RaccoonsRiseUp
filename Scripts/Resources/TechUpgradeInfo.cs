@@ -4,7 +4,7 @@ namespace RRU;
 /// This resource represents an upgrade option in the tech page
 /// </summary>
 [GlobalClass]
-public sealed partial class TechUpgradeInfo: Resource
+public sealed partial class TechUpgradeInfo : Resource
 {
     [Export]
     public StringName Id;
