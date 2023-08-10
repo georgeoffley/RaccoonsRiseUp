@@ -2,12 +2,12 @@ namespace RRU;
 
 public partial class UITech : SubViewport
 {
+    public static bool TechNodeActive { get; set; }
+
     [Export] int techNodeSpacing;
 
     [Export] TechDataService techData;
     [Export] TechNodeDetails detailsView;
-
-    public static bool TechNodeActive { get; set; }
 
     Camera2D camera;
     ColorRect overlay; // transparent overlay
