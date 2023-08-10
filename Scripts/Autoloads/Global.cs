@@ -14,7 +14,7 @@ namespace RRU;
 
 public partial class Global : Node
 {
-	internal static Action QuitAction;
+	public static Action QuitAction { get; private set; }
 
 	public static NodePath GetNodePath
 		=> "/root/Global";
