@@ -72,7 +72,8 @@ public sealed partial class TechNodeDetails : Control
         // Update requirements
         for (int i = 0; i < requirements.Length; ++ i)
         {
-            TechUpgradeInfo requirementInfo = dataService.GetInfoForId(requirements[i]);
+            TechUpgradeInfo requirementInfo = 
+                dataService.GetInfoForId(requirements[i]);
 
             requirementsView.AddChild(
                 new Label()
