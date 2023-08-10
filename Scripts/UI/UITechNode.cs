@@ -2,106 +2,72 @@ namespace RRU;
 
 public partial class UITechNode : Control
 {
+    private const int DescriptionFontSize = 32;
+    private const int DescriptionOffset = 125;
+
+    private static Color LearnedColour
+        => new(0.3f, 1.0f, 0.3f, 0.5f);
+
+    private static Color LockedColour
+        => new(1.0f, 0.3f, 0.3f, 0.35f);
+
     public static event Action<Vector2> ClickedOnNode;
+
+    [Signal]
+    public delegate void ShowDetailRequestEventHandler(TechInfo info);
+
+    private TextureRect textureRect;
 
     public bool IsActive { get; set; }
 
-    TechType techType;
+    TechNodeState nodeState;
     GTween tweenScale;
-    GTween tweenLabelColor;
-    Label label;
+    TechInfo info;
 
     public override void _Ready()
     {
+        nodeState = TechNodeState.Locked;
+        textureRect = GetNode<TextureRect>("%TextureRect");
         PivotOffset += Size / 2;
 
-        MouseEntered += () =>
-        {
-            if (UITech.TechNodeActive)
-                return;
-
-            AnimateScale(1.05f, 
-                zindex: 100, 
-                duration: 0.1);
-        };
-
-        MouseExited += () =>
-        {
-            if (UITech.TechNodeActive)
-                return;
-
-            AnimateScale(1, 
-                zindex: 0, 
-                duration: 0.1);
-        };
-
-        GuiInput += input =>
-        {
-            if (input is InputEventMouseButton mouse)
-            {
-                if (!UITech.TechNodeActive)
-                {
-                    if (mouse.IsLeftClickPressed())
-                    {
-                        IsActive = true;
-                        UITech.TechNodeActive = true;
-
-                        AnimateScale(2,
-                            zindex: 100,
-                            duration: 0.2);
-
-                        ClickedOnNode?.Invoke(Position + Size / 2);
-
-                        tweenLabelColor = new GTween(label);
-                        tweenLabelColor.AnimateColor(new Color(1, 1, 1, 1), 0.3, true);
-                        label.Show();
-                    }
-                }
-            }
-        };
+        MouseEntered += OnHoverEnter;
+        MouseExited += OnHoverExit;
+        GuiInput += OnGuiInput;
     }
 
-    public void CreateDescriptionLabel()
+    public void Setup(TechInfo info)
     {
-        var fontSize = 32;
-        var techDesc = Game.TechData[techType].Description;
-        label = new GLabel(techDesc, fontSize);
-        label.Modulate = new Color(1, 1, 1, 0);
-        label.ZIndex = 100;
-        GetParent().AddChild(label);
+        this.info = info;
+        textureRect.Texture = info.Data.GetImage();
+    }
 
-        var offset = 125;
-        var pos = Position;
-        pos.X += Size.X + offset;
-        pos.Y += Size.Y / 2 - fontSize;
-        label.Position = pos;
-        label.Hide();
+    public void SetLearnState(TechNodeState state)
+    {
+        nodeState = state;
+
+        switch (state)
+        {
+            case TechNodeState.Locked:
+                textureRect.Modulate = LockedColour;
+                break;
+
+            case TechNodeState.Unlocked:
+                textureRect.Modulate = Colors.White;
+                break;
+
+            case TechNodeState.Learned:
+                textureRect.Modulate = LearnedColour;
+                break;
+        }
     }
 
     public void Deactivate()
     {
         ZIndex = 0;
-        label.Hide();
-        tweenLabelColor?.Kill();
-        label.Modulate = new Color(1, 1, 1, 0);
 
         AnimateScale(1,
             zindex: 0,
             duration: 0.2);
-    }
-
-    public void Setup(TechType techType)
-    {
-        this.techType = techType;
-        SetImage(techType);
-    }
-
-    void SetImage(TechType techType)
-    {
-        var imagePath = $"res://Sprites/Icons/{Game.TechData[techType].ImagePath}.svg";
-        var textureRect = GetNode<TextureRect>("TextureRect");
-
-        textureRect.Texture = GD.Load<Texture2D>(imagePath);
     }
 
     void AnimateScale(float scale, int zindex, double duration = 0.1)
@@ -112,4 +78,72 @@ public partial class UITechNode : Control
         tweenScale.Animate("scale", Vector2.One * scale, duration)
             .SetTrans(Tween.TransitionType.Sine);
     }
+
+    /// Signal Handlers ///
+
+    public void OnLearnStateChanged(TechDataService service, StringName id, bool isLearned)
+    {
+        if (nodeState == TechNodeState.Learned)
+            return;
+
+        bool isUnlocked = service.IsUnlocked(info.Id);
+        SetLearnState(isUnlocked ? TechNodeState.Unlocked : TechNodeState.Locked);
+
+        if (info.Id != id || !isLearned)
+            return;
+
+        SetLearnState(TechNodeState.Learned);
+    }
+
+    private void OnHoverEnter()
+    {
+        if (UITech.TechNodeActive)
+            return;
+
+        AnimateScale(1.05f,
+            zindex: 100,
+            duration: 0.1);
+    }
+
+    private void OnHoverExit()
+    {
+        if (UITech.TechNodeActive)
+            return;
+
+        AnimateScale(1,
+            zindex: 0,
+            duration: 0.1);
+    }
+
+    private void OnGuiInput(InputEvent @event)
+    {
+        if (IsActive ||
+            @event is not InputEventMouseButton mouse ||
+            UITech.TechNodeActive ||
+            !mouse.IsLeftClickPressed())
+        {
+            return;
+        }
+
+        IsActive = true;
+        UITech.TechNodeActive = true;
+
+        AnimateScale(
+            scale: 1.5f,
+            zindex: 100,
+            duration: 0.2
+        );
+
+        ClickedOnNode?.Invoke(Position + Size / 2);
+        EmitSignal(SignalName.ShowDetailRequest, info);
+
+        GetViewport().SetInputAsHandled();
+    }
+}
+
+public enum TechNodeState
+{
+    Locked,
+    Unlocked,
+    Learned
 }

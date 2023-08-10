@@ -21,6 +21,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_nj67c")
 script = ExtResource("1_oeyy4")
 
 [node name="TextureRect" type="TextureRect" parent="."]
+unique_name_in_owner = true
 layout_mode = 2
 texture = ExtResource("2_hpyo7")
 expand_mode = 1

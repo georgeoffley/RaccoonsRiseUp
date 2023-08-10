@@ -6,6 +6,6 @@ public class CommandExit : Command
 
     public override void Run(string[] args)
     {
-        Global.Quit();
+        Global.QuitAction?.Invoke();
     }
 }

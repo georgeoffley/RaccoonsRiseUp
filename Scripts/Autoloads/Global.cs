@@ -14,11 +14,20 @@ namespace RRU;
 
 public partial class Global : Node
 {
-    private static Global Instance { get; set; }
+	internal static Action QuitAction;
+
+	public static NodePath GetNodePath
+		=> "/root/Global";
+
+	[Signal]
+	public delegate void OnQuitRequestEventHandler();
 
 	public override void _Ready()
 	{
-        Instance = this;
+		GetTree().AutoAcceptQuit = false;
+
+		// For 'CommandExit' to work
+		QuitAction = Quit;
 
         // Gradually fade out all SFX whenever the scene is changed
         SceneManager.SceneChanged += name => AudioManager.FadeOutSFX();
@@ -31,20 +40,19 @@ public partial class Global : Node
 
     public override void _Notification(int what)
 	{
-		if (what == NotificationWMCloseRequest)
-		{
-			GetTree().AutoAcceptQuit = false;
-			Quit();
-		}
+		if (what != NotificationWMCloseRequest)
+			return;
+
+		CallDeferred(MethodName.Quit);
 	}
 
-	public static void Quit()
+	public void Quit()
 	{
         // Handle cleanup here
         OptionsManager.SaveOptions();
         OptionsManager.SaveHotkeys();
-        Game.SaveGame();
 
-        Instance.GetTree().Quit();
+		EmitSignal(SignalName.OnQuitRequest);
+        GetTree().CallDeferred(SceneTree.MethodName.Quit);
 	}
 }
