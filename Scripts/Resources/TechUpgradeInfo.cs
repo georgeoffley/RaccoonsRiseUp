@@ -6,21 +6,21 @@ namespace RRU;
 [GlobalClass]
 public sealed partial class TechUpgradeInfo: Resource
 {
-	[Export]
-	public StringName Id;
+    [Export]
+    public StringName Id;
 
-	[Export]
-	public string[] RequiredUpgradeIds;
+    [Export]
+    public string[] RequiredUpgradeIds;
 
-	[Export]
-	public string DisplayName;
+    [Export]
+    public string DisplayName;
 
-	[Export]
-	public TechType UpgradeType;
+    [Export]
+    public TechType UpgradeType;
 
-	[Export]
-	public float Modifier;
+    [Export]
+    public float Modifier;
 
-	[Export]
-	public Vector2I Position;
+    [Export]
+    public Vector2I Position;
 }

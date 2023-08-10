@@ -5,35 +5,35 @@ namespace RRU;
 /// </summary>
 public sealed partial class TechInfo: RefCounted
 {
-	public StringName Id;
-	public float Modifier;
+    public StringName Id;
+    public float Modifier;
 
-	public TechData Data;
-	public TechType Type;
+    public TechData Data;
+    public TechType Type;
 
-	/// <summary>
-	/// Creates a Godot-compatible info object from a given type
-	/// </summary>
-	/// <returns></returns>
-	public static TechInfo FromType(StringName id, float modifier, TechType type)
-	{
-		TechInfo info = new()
-		{
-			Id = id,
-			Modifier = modifier,
-			Type = type
-		};
+    /// <summary>
+    /// Creates a Godot-compatible info object from a given type
+    /// </summary>
+    /// <returns></returns>
+    public static TechInfo FromType(StringName id, float modifier, TechType type)
+    {
+        TechInfo info = new()
+        {
+            Id = id,
+            Modifier = modifier,
+            Type = type
+        };
 
-		ReadOnlySpan<TechType> types = Game.TechData.Keys.ToArray();
+        ReadOnlySpan<TechType> types = Game.TechData.Keys.ToArray();
 
-		for (int i = 0; i < types.Length; ++ i)
-		{
-			if (types[i] != type)
-				continue;
+        for (int i = 0; i < types.Length; ++ i)
+        {
+            if (types[i] != type)
+                continue;
 
-			info.Data = Game.TechData[types[i]];
-		}
+            info.Data = Game.TechData[types[i]];
+        }
 
-		return info;
-	}
+        return info;
+    }
 }

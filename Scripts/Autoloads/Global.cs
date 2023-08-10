@@ -14,30 +14,30 @@ namespace RRU;
 
 public partial class Global : Node
 {
-	public static Action QuitAction { get; private set; }
+    public static Action QuitAction { get; private set; }
 
-	public static NodePath GetNodePath => "/root/Global";
+    public static NodePath GetNodePath => "/root/Global";
 
-	[Signal]
-	public delegate void OnQuitRequestEventHandler();
+    [Signal]
+    public delegate void OnQuitRequestEventHandler();
 
-	public override void _Ready()
-	{
-		// For 'CommandExit' to work
-		QuitAction = Quit;
+    public override void _Ready()
+    {
+        // For 'CommandExit' to work
+        QuitAction = Quit;
 
         // Gradually fade out all SFX whenever the scene is changed
         SceneManager.SceneChanged += name => AudioManager.FadeOutSFX();
     }
 
-	public override void _PhysicsProcess(double delta)
-	{
-		Logger.Update();
-	}
+    public override void _PhysicsProcess(double delta)
+    {
+        Logger.Update();
+    }
 
     public override void _Notification(int what)
     {
-	    if (what == NotificationWMCloseRequest)
+        if (what == NotificationWMCloseRequest)
             Quit();
     }
 
@@ -47,7 +47,7 @@ public partial class Global : Node
         OptionsManager.SaveOptions();
         OptionsManager.SaveHotkeys();
 
-	    EmitSignal(SignalName.OnQuitRequest);
+        EmitSignal(SignalName.OnQuitRequest);
         GetTree().Quit();
     }
 }
