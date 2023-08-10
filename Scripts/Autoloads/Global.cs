@@ -16,8 +16,7 @@ public partial class Global : Node
 {
 	public static Action QuitAction { get; private set; }
 
-	public static NodePath GetNodePath
-		=> "/root/Global";
+	public static NodePath GetNodePath => "/root/Global";
 
 	[Signal]
 	public delegate void OnQuitRequestEventHandler();
