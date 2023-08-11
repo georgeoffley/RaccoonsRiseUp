@@ -32,10 +32,13 @@ public partial class Game : Node
         { StructureType.ResearchCamp, 0 }
     };
 
-    public override void _Ready()
+    public override void _EnterTree()
     {
         LoadGame();
+    }
 
+    public override void _Ready()
+    {
         pageInfo.Raccoons = Raccoons;
         pageJobs.Raccoons = Raccoons;
 

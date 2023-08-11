@@ -3,10 +3,7 @@ namespace RRU;
 [GlobalClass]
 public sealed partial class TechDataService : Resource
 {
-    const int MaxUpgrades = 128;
-
-    [Signal]
-    public delegate void ResearchStateUpdatedEventHandler(TechDataService service, StringName id, bool isResearched);
+    public event Action<TechDataService, StringName, bool> ResearchStateUpdated;
 
     // Note that renaming this will cause the resource to get reset
     // Not worth the hassle
@@ -24,7 +21,7 @@ public sealed partial class TechDataService : Resource
     public void Research(StringName id)
     {
         researchedUpgrades.Add(id);
-        EmitSignal(SignalName.ResearchStateUpdated, this, id, true);
+        ResearchStateUpdated.Invoke(this, id, true);
     }
 
     public void Unresearch(StringName id)
@@ -33,10 +30,10 @@ public sealed partial class TechDataService : Resource
             return;
 
         researchedUpgrades.Remove(id);
-        EmitSignal(SignalName.ResearchStateUpdated, this, id, false);
+        ResearchStateUpdated.Invoke(this, id, false);
     }
 
-    public bool IsResearched(StringName id) => 
+    public bool IsResearched(StringName id) =>
         researchedUpgrades.Contains(id);
 
     public bool IsUnlocked(StringName id)
@@ -53,7 +50,7 @@ public sealed partial class TechDataService : Resource
 
         ReadOnlySpan<string> prerequisiteIds = info.RequiredUpgradeIds;
 
-        for (int i = 0; i < prerequisiteIds.Length; ++ i)
+        for (int i = 0; i < prerequisiteIds.Length; ++i)
         {
             if (IsResearched(prerequisiteIds[i]))
                 continue;
@@ -76,7 +73,7 @@ public sealed partial class TechDataService : Resource
     {
         ReadOnlySpan<TechUpgradeInfo> upgrades = _upgrades;
 
-        for (int i = 0; i < upgrades.Length; ++ i)
+        for (int i = 0; i < upgrades.Length; ++i)
         {
             if (upgrades[i].Id != id)
                 continue;
@@ -96,7 +93,7 @@ public sealed partial class TechDataService : Resource
     /// </summary>
     public string[] Serialise()
     {
-        Span<string> upgrades = new string[MaxUpgrades];
+        Span<string> upgrades = new string[_upgrades.Length];
         int upgradeIdx = 0;
 
         foreach (StringName id in researchedUpgrades)
@@ -114,7 +111,7 @@ public sealed partial class TechDataService : Resource
 
         researchedUpgrades.Clear();
 
-        for (int i = 0; i < ids.Length; ++ i)
+        for (int i = 0; i < ids.Length; ++i)
             researchedUpgrades.Add(ids[i]);
     }
 }

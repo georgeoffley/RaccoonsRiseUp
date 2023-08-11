@@ -17,8 +17,7 @@ public partial class Global : Node
     public static Action QuitAction { get; private set; }
     public static NodePath GetNodePath => "/root/Global";
 
-    [Signal]
-    public delegate void OnQuitRequestEventHandler();
+    public event Action OnQuitRequest;
 
     public override void _Ready()
     {
@@ -46,7 +45,7 @@ public partial class Global : Node
         OptionsManager.SaveOptions();
         OptionsManager.SaveHotkeys();
 
-        EmitSignal(SignalName.OnQuitRequest);
+        OnQuitRequest.Invoke();
         GetTree().Quit();
     }
 }
