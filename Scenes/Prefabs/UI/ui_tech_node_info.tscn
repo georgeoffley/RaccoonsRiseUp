@@ -36,6 +36,7 @@ expand_mode = 5
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="Type" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer"]
 unique_name_in_owner = true
@@ -48,44 +49,66 @@ layout_mode = 2
 size_flags_vertical = 1
 text = "Description text"
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 30
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
 modulate = Color(0.894118, 0.894118, 0.894118, 1)
 layout_mode = 2
 
-[node name="CostLabel" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer2"]
+[node name="ModifiersLabel" type="Label" parent="MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Effects"
+
+[node name="Modifiers" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer2/Modifiers"]
+layout_mode = 2
+text = "* Woodcutting + 5%"
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+modulate = Color(0.894118, 0.894118, 0.894118, 1)
+layout_mode = 2
+
+[node name="CostLabel" type="Label" parent="MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer3"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Required Materials:"
 
-[node name="Cost" type="VBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer2"]
+[node name="Cost" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer3"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxContainer2/Cost"]
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/VBoxContainer3/Cost"]
 layout_mode = 2
 text = "* Material x20"
 
-[node name="Prerequisites" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="Prerequisites" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
 unique_name_in_owner = true
 modulate = Color(1, 0.729412, 0.466667, 1)
 layout_mode = 2
 
-[node name="PrerequisiteLabel" type="Label" parent="MarginContainer/VBoxContainer/Prerequisites"]
+[node name="PrerequisiteLabel" type="Label" parent="MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/Prerequisites"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Required Upgrades:"
 
-[node name="Requirements" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Prerequisites"]
+[node name="Requirements" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/Prerequisites"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/Prerequisites/Requirements"]
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/Prerequisites/Requirements"]
 layout_mode = 2
 text = "* Upgrade Name 1"
-
-[node name="Spacer" type="Control" parent="MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2

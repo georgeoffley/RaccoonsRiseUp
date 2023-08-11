@@ -72,7 +72,6 @@ public partial class UITech : SubViewport
         {
             AddTech(
                 id: upgrades[i].Id,
-                modifier: upgrades[i].Modifier,
                 techType: upgrades[i].UpgradeType,
                 x: upgrades[i].Position.X,
                 y: upgrades[i].Position.Y
@@ -110,10 +109,10 @@ public partial class UITech : SubViewport
         HideDetails();
     }
 
-    void AddTech(StringName id, float modifier, TechType techType, int x, int y)
+    void AddTech(StringName id, TechType techType, int x, int y)
     {
         var techNode = Prefabs.TechNode.Instantiate<UITechNode>();
-        TechInfo techInfo = TechInfo.FromType(id, modifier, techType);
+        TechInfo techInfo = TechInfo.FromType(id, techType);
 
         techNode.ClickedOnNode += techInfo =>
         {

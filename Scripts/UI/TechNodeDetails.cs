@@ -14,12 +14,15 @@ public sealed partial class TechNodeDetails : Control
     Label labelStatus;
     Button buttonResearch;
 
-    Control prerequisiteView;
-    Label prerequisiteLabel;
-    Control requirementsView;
+    Label modifiersLabel;
+    Control modifiersView;
 
     Label costLabel;
     Control costView;
+
+    Control prerequisiteView;
+    Label prerequisiteLabel;
+    Control requirementsView;
 
     TechInfo info;
     bool wasVisible;
@@ -31,6 +34,9 @@ public sealed partial class TechNodeDetails : Control
         icon = GetNode<TextureRect>("%Icon");
         labelType = GetNode<Label>("%Type");
         labelDescription = GetNode<Label>("%Description");
+
+        modifiersLabel = GetNode<Label>("%ModifiersLabel");
+        modifiersView = GetNode<Control>("%Modifiers");
 
         costLabel = GetNode<Label>("%CostLabel");
         costView = GetNode<Control>("%Cost");
@@ -110,6 +116,7 @@ public sealed partial class TechNodeDetails : Control
         TechUpgradeInfo upgradeInfo = dataService.GetInfoForId(info.Id);
 
         ReadOnlySpan<string> requirements = upgradeInfo.RequiredUpgradeIds;
+        ReadOnlySpan<ResourceModifierDefinition> modifiers = upgradeInfo.Modifiers;
         ReadOnlySpan<ResourceRequirement> cost = upgradeInfo.UpgradeCost;
 
         prerequisiteView.Visible = requirements.Length > 0;
@@ -128,11 +135,23 @@ public sealed partial class TechNodeDetails : Control
         if (cost.Length > 0)
         {
             ClearListView(costView);
+
+            costLabel.Text = cost.Length > 1 ?
+                "Required Materials" : "Required Material";
         }
 
-        int l = Math.Max(requirements.Length, cost.Length);
+        // Clear modifiers
+        ClearListView(modifiersView);
 
-        // Update requirements
+        modifiersLabel.Text = modifiers.Length > 1 ?
+            "Effects" : "Effect";
+
+        // Update details in a single pass
+        int l = Math.Max(
+            cost.Length,
+            Math.Max(requirements.Length, modifiers.Length)
+        );
+
         for (int i = 0; i < l; ++ i)
         {
             if (i < requirements.Length)
@@ -152,6 +171,24 @@ public sealed partial class TechNodeDetails : Control
                     view: costView,
                     text: $"* {cost[i].Type} x{cost[i].Amount}"
                 );
+            }
+
+            if (i < modifiers.Length)
+            {
+                string modLabelText = null;
+
+                switch (modifiers[i].ModType)
+                {
+                    case ResourceModifierType.Additive:
+                        modLabelText = $"* {modifiers[i].TargetResource} Output + {modifiers[i].ModValue}";
+                        break;
+
+                    case ResourceModifierType.Multiplicative:
+                        modLabelText = $"* {modifiers[i].TargetResource} Output + {modifiers[i].ModValue * 100.0:0.0} %";
+                        break;
+                }
+
+                AppendListItem(modifiersView, modLabelText);
             }
         }
     }

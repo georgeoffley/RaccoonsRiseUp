@@ -10,6 +10,9 @@ public sealed partial class GameState: Resource
     public event Action<ResourceDict> ResourcesChanged;
     public event Action<JobDict> JobsChanged;
 
+    [Export] TechDataService dataService;
+    [Export] public JobData[] JobData;
+
     public int Raccoons { get; set; } = 30;
 
     public JobDict Jobs { get; set; }

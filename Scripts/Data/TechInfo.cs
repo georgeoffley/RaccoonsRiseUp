@@ -16,16 +16,15 @@ public sealed partial class TechInfo : RefCounted
 
     /// <summary>
     /// Creates a Godot-compatible info object from a given type.
-    /// This function finds a matching 'GameData' from the 'Game.TechData' 
+    /// This function finds a matching 'GameData' from the 'Game.TechData'
     /// dictionary.
     /// </summary>
     /// <returns></returns>
-    public static TechInfo FromType(StringName id, float modifier, TechType type)
+    public static TechInfo FromType(StringName id, TechType type)
     {
         TechInfo info = new()
         {
             Id = id,
-            Modifier = modifier,
             Type = type
         };
 

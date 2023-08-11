@@ -64,15 +64,9 @@ public partial class Game : Node
         gameState.UpdateJobs();
     }
 
-    public override void _PhysicsProcess(double delta)
+    public override void _Process(double delta)
     {
-        var resourcesChanged = false;
-
-        ResourcesGainedByStructures(delta, ref resourcesChanged);
-        ResourcesGainedByJobs(delta, ref resourcesChanged);
-
-        if (resourcesChanged)
-            gameState.UpdateResources();
+        gameState.ProcessResourceTick(delta);
     }
 
     void ResourcesGainedByStructures(double delta, ref bool resourcesChanged)
@@ -104,28 +98,28 @@ public partial class Game : Node
         }
     }
 
-    void ResourcesGainedByJobs(double delta, ref bool resourcesChanged)
-    {
-        foreach (var job in jobData)
-        {
-            var jobData = job.Value;
+    // void ResourcesGainedByJobs(double delta, ref bool resourcesChanged)
+    // {
+    //     foreach (var job in jobData)
+    //     {
+    //         var jobData = job.Value;
 
-            if (gameState.Jobs[job.Key] == 0)
-                continue;
+    //         if (gameState.Jobs[job.Key] == 0)
+    //             continue;
 
-            jobData.ElpasedTime += delta;
+    //         jobData.ElapsedTime += delta;
 
-            if (jobData.ElpasedTime >= jobData.GatherRate)
-            {
-                var timesEarned = jobData.ElpasedTime / jobData.GatherRate;
+    //         if (jobData.ElapsedTime >= jobData.GatherRate)
+    //         {
+    //             var timesEarned = jobData.ElapsedTime / jobData.GatherRate;
 
-                jobData.ElpasedTime -= jobData.GatherRate * timesEarned;
+    //             jobData.ElapsedTime -= jobData.GatherRate * timesEarned;
 
-                gameState.Resources[jobData.ResourceType] +=
-                    jobData.GatherAmount * timesEarned * gameState.Jobs[job.Key];
+    //             gameState.Resources[jobData.ResourceType] +=
+    //                 jobData.GatherAmount * timesEarned * gameState.Jobs[job.Key];
 
-                resourcesChanged = true;
-            }
-        }
-    }
+    //             resourcesChanged = true;
+    //         }
+    //     }
+    // }
 }

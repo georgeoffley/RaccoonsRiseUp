@@ -1,174 +1,304 @@
-[gd_resource type="Resource" script_class="TechDataService" load_steps=28 format=3 uid="uid://bq25wiv36tld1"]
+[gd_resource type="Resource" script_class="TechDataService" load_steps=49 format=3 uid="uid://bq25wiv36tld1"]
 
+[ext_resource type="Script" path="res://Scripts/Resources/ResourceModifierDefinition.cs" id="1_6lwrk"]
 [ext_resource type="Script" path="res://Scripts/Resources/ResourceRequirement.cs" id="1_aoil5"]
 [ext_resource type="Script" path="res://Scripts/Resources/TechDataService.cs" id="1_w3jw2"]
 [ext_resource type="Script" path="res://Scripts/Resources/TechUpgradeInfo.cs" id="1_y3fwg"]
 
-[sub_resource type="Resource" id="Resource_qfh00"]
+[sub_resource type="Resource" id="Resource_mk6gd"]
+script = ExtResource("1_6lwrk")
+TargetResource = 0
+ModType = 1
+ModValue = 0.05
+
+[sub_resource type="Resource" id="Resource_x7xig"]
 script = ExtResource("1_aoil5")
 Type = 1
-Amount = 10
+Amount = 50
 
-[sub_resource type="Resource" id="Resource_u5ita"]
+[sub_resource type="Resource" id="Resource_b43ew"]
 script = ExtResource("1_y3fwg")
 Id = &"wood1"
 RequiredUpgradeIds = PackedStringArray()
-UpgradeCost = Array[Object]([SubResource("Resource_qfh00")])
-DisplayName = "Basic Wood Upgrade"
+DisplayName = "Basic Axes"
 UpgradeType = 0
-Modifier = 0.05
 Position = Vector2i(0, 0)
+UpgradeCost = Array[Object]([SubResource("Resource_x7xig")])
+Modifiers = Array[Object]([SubResource("Resource_mk6gd")])
 
-[sub_resource type="Resource" id="Resource_xmruo"]
+[sub_resource type="Resource" id="Resource_2gmru"]
+script = ExtResource("1_6lwrk")
+TargetResource = 0
+ModType = 1
+ModValue = 0.05
+
+[sub_resource type="Resource" id="Resource_810ry"]
 script = ExtResource("1_aoil5")
-Type = 1
+Type = 0
 Amount = 50
 
-[sub_resource type="Resource" id="Resource_6yjmq"]
+[sub_resource type="Resource" id="Resource_3buv2"]
+script = ExtResource("1_aoil5")
+Type = 1
+Amount = 80
+
+[sub_resource type="Resource" id="Resource_l4qjo"]
 script = ExtResource("1_y3fwg")
 Id = &"wood2"
 RequiredUpgradeIds = PackedStringArray("wood1")
-UpgradeCost = Array[Object]([SubResource("Resource_xmruo")])
-DisplayName = "Wood Upgrade"
+DisplayName = "Stone Axes"
 UpgradeType = 0
-Modifier = 0.05
 Position = Vector2i(1, 0)
+UpgradeCost = Array[Object]([SubResource("Resource_810ry"), SubResource("Resource_3buv2")])
+Modifiers = Array[Object]([SubResource("Resource_2gmru")])
 
-[sub_resource type="Resource" id="Resource_pmryv"]
-script = ExtResource("1_aoil5")
-Type = 0
-Amount = 30
+[sub_resource type="Resource" id="Resource_3juqv"]
+script = ExtResource("1_6lwrk")
+TargetResource = 0
+ModType = 1
+ModValue = 0.075
 
-[sub_resource type="Resource" id="Resource_s5usq"]
-script = ExtResource("1_aoil5")
-Type = 1
-Amount = 80
-
-[sub_resource type="Resource" id="Resource_8r20m"]
-script = ExtResource("1_y3fwg")
-Id = &"wood3"
-RequiredUpgradeIds = PackedStringArray("wood2")
-UpgradeCost = Array[Object]([SubResource("Resource_pmryv"), SubResource("Resource_s5usq")])
-DisplayName = "Advanced Wood Upgrade"
-UpgradeType = 0
-Modifier = 0.05
-Position = Vector2i(2, 0)
-
-[sub_resource type="Resource" id="Resource_l1amq"]
-script = ExtResource("1_aoil5")
-Type = 0
-Amount = 150
-
-[sub_resource type="Resource" id="Resource_sh1nd"]
-script = ExtResource("1_aoil5")
-Type = 1
-Amount = 250
-
-[sub_resource type="Resource" id="Resource_2si4o"]
-script = ExtResource("1_y3fwg")
-Id = &"wood4"
-RequiredUpgradeIds = PackedStringArray("wood3")
-UpgradeCost = Array[Object]([SubResource("Resource_l1amq"), SubResource("Resource_sh1nd")])
-DisplayName = "Final Wood Upgrade"
-UpgradeType = 0
-Modifier = 0.1
-Position = Vector2i(3, 0)
-
-[sub_resource type="Resource" id="Resource_egqgl"]
+[sub_resource type="Resource" id="Resource_nprqu"]
 script = ExtResource("1_aoil5")
 Type = 0
 Amount = 50
 
-[sub_resource type="Resource" id="Resource_hrh4c"]
-script = ExtResource("1_y3fwg")
-Id = &"res1"
-RequiredUpgradeIds = PackedStringArray()
-UpgradeCost = Array[Object]([SubResource("Resource_egqgl")])
-DisplayName = "Basic Research Upgrade"
-UpgradeType = 1
-Modifier = 0.05
-Position = Vector2i(0, 3)
-
-[sub_resource type="Resource" id="Resource_ioc80"]
-script = ExtResource("1_aoil5")
-Type = 0
-Amount = 100
-
-[sub_resource type="Resource" id="Resource_qyib6"]
+[sub_resource type="Resource" id="Resource_gago4"]
 script = ExtResource("1_aoil5")
 Type = 1
-Amount = 100
+Amount = 200
 
-[sub_resource type="Resource" id="Resource_7uvla"]
+[sub_resource type="Resource" id="Resource_svdyu"]
 script = ExtResource("1_y3fwg")
-Id = &"res2"
-RequiredUpgradeIds = PackedStringArray("res1")
-UpgradeCost = Array[Object]([SubResource("Resource_ioc80"), SubResource("Resource_qyib6")])
-DisplayName = "Research Upgrade"
-UpgradeType = 1
-Modifier = 0.05
-Position = Vector2i(1, 3)
-
-[sub_resource type="Resource" id="Resource_e3arc"]
-script = ExtResource("1_aoil5")
-Type = 0
-Amount = 80
-
-[sub_resource type="Resource" id="Resource_s5ym4"]
-script = ExtResource("1_aoil5")
-Type = 1
-Amount = 150
-
-[sub_resource type="Resource" id="Resource_5seq2"]
-script = ExtResource("1_y3fwg")
-Id = &"xwood1"
+Id = &"wood3"
 RequiredUpgradeIds = PackedStringArray("wood2")
-UpgradeCost = Array[Object]([SubResource("Resource_e3arc"), SubResource("Resource_s5ym4")])
-DisplayName = "Wood Focus"
+DisplayName = "Iron Axes"
 UpgradeType = 0
-Modifier = 0.15
-Position = Vector2i(2, -1)
+Position = Vector2i(2, 0)
+UpgradeCost = Array[Object]([SubResource("Resource_nprqu"), SubResource("Resource_gago4")])
+Modifiers = Array[Object]([SubResource("Resource_3juqv")])
 
-[sub_resource type="Resource" id="Resource_fhenn"]
+[sub_resource type="Resource" id="Resource_bnqad"]
+script = ExtResource("1_6lwrk")
+TargetResource = 0
+ModType = 1
+ModValue = 0.075
+
+[sub_resource type="Resource" id="Resource_p780c"]
 script = ExtResource("1_aoil5")
 Type = 0
-Amount = 220
+Amount = 100
 
-[sub_resource type="Resource" id="Resource_wkvlk"]
+[sub_resource type="Resource" id="Resource_mwbjb"]
 script = ExtResource("1_aoil5")
 Type = 1
-Amount = 500
+Amount = 350
 
-[sub_resource type="Resource" id="Resource_uau7l"]
+[sub_resource type="Resource" id="Resource_novj8"]
 script = ExtResource("1_y3fwg")
-Id = &"xwood2"
-RequiredUpgradeIds = PackedStringArray("xwood1")
-UpgradeCost = Array[Object]([SubResource("Resource_fhenn"), SubResource("Resource_wkvlk")])
-DisplayName = "True Wood Focus"
+Id = &"wood4"
+RequiredUpgradeIds = PackedStringArray("wood3")
+DisplayName = "Steel Axes"
 UpgradeType = 0
-Modifier = 0.25
+Position = Vector2i(3, 0)
+UpgradeCost = Array[Object]([SubResource("Resource_p780c"), SubResource("Resource_mwbjb")])
+Modifiers = Array[Object]([SubResource("Resource_bnqad")])
+
+[sub_resource type="Resource" id="Resource_6kaij"]
+script = ExtResource("1_6lwrk")
+TargetResource = 0
+ModType = 0
+ModValue = 1.5
+
+[sub_resource type="Resource" id="Resource_q3yg8"]
+script = ExtResource("1_aoil5")
+Type = 0
+Amount = 20
+
+[sub_resource type="Resource" id="Resource_xn73c"]
+script = ExtResource("1_aoil5")
+Type = 1
+Amount = 200
+
+[sub_resource type="Resource" id="Resource_rlxob"]
+script = ExtResource("1_y3fwg")
+Id = &"fwood1"
+RequiredUpgradeIds = PackedStringArray("wood3")
+DisplayName = "Wood Studies"
+UpgradeType = 0
 Position = Vector2i(3, -1)
+UpgradeCost = Array[Object]([SubResource("Resource_q3yg8"), SubResource("Resource_xn73c")])
+Modifiers = Array[Object]([SubResource("Resource_6kaij")])
 
-[sub_resource type="Resource" id="Resource_4vp0v"]
+[sub_resource type="Resource" id="Resource_melrr"]
+script = ExtResource("1_6lwrk")
+TargetResource = 0
+ModType = 0
+ModValue = 1.5
+
+[sub_resource type="Resource" id="Resource_fxlht"]
+script = ExtResource("1_6lwrk")
+TargetResource = 0
+ModType = 1
+ModValue = 0.05
+
+[sub_resource type="Resource" id="Resource_fyiqt"]
 script = ExtResource("1_aoil5")
 Type = 0
-Amount = 500
+Amount = 50
 
-[sub_resource type="Resource" id="Resource_h3887"]
+[sub_resource type="Resource" id="Resource_6g8fb"]
 script = ExtResource("1_aoil5")
 Type = 1
-Amount = 900
+Amount = 800
 
-[sub_resource type="Resource" id="Resource_2ep4g"]
+[sub_resource type="Resource" id="Resource_g3snp"]
 script = ExtResource("1_y3fwg")
-Id = &"zwood"
-RequiredUpgradeIds = PackedStringArray("wood4", "xwood2")
-UpgradeCost = Array[Object]([SubResource("Resource_4vp0v"), SubResource("Resource_h3887")])
-DisplayName = "Super Wood Upgrade"
+Id = &"fwood2"
+RequiredUpgradeIds = PackedStringArray("fwood1")
+DisplayName = "Adv. Wood Studies"
 UpgradeType = 0
-Modifier = 0.2
-Position = Vector2i(4, 1)
+Position = Vector2i(4, -1)
+UpgradeCost = Array[Object]([SubResource("Resource_fyiqt"), SubResource("Resource_6g8fb")])
+Modifiers = Array[Object]([SubResource("Resource_melrr"), SubResource("Resource_fxlht")])
+
+[sub_resource type="Resource" id="Resource_uqpe8"]
+script = ExtResource("1_6lwrk")
+TargetResource = 0
+ModType = 1
+ModValue = 0.15
+
+[sub_resource type="Resource" id="Resource_k04tk"]
+script = ExtResource("1_6lwrk")
+TargetResource = 0
+ModType = 0
+ModValue = 2.0
+
+[sub_resource type="Resource" id="Resource_gtnpn"]
+script = ExtResource("1_aoil5")
+Type = 0
+Amount = 300
+
+[sub_resource type="Resource" id="Resource_f3quf"]
+script = ExtResource("1_aoil5")
+Type = 1
+Amount = 1500
+
+[sub_resource type="Resource" id="Resource_bgimb"]
+script = ExtResource("1_y3fwg")
+Id = &"xwood"
+RequiredUpgradeIds = PackedStringArray("fwood2", "wood4")
+DisplayName = "Art of Woodcutting"
+UpgradeType = 0
+Position = Vector2i(5, 0)
+UpgradeCost = Array[Object]([SubResource("Resource_gtnpn"), SubResource("Resource_f3quf")])
+Modifiers = Array[Object]([SubResource("Resource_uqpe8"), SubResource("Resource_k04tk")])
+
+[sub_resource type="Resource" id="Resource_ci8lc"]
+script = ExtResource("1_6lwrk")
+TargetResource = 1
+ModType = 1
+ModValue = 0.05
+
+[sub_resource type="Resource" id="Resource_f6sid"]
+script = ExtResource("1_aoil5")
+Type = 1
+Amount = 100
+
+[sub_resource type="Resource" id="Resource_mobq8"]
+script = ExtResource("1_y3fwg")
+Id = &"tech1"
+RequiredUpgradeIds = PackedStringArray()
+DisplayName = "Focus"
+UpgradeType = 1
+Position = Vector2i(0, 2)
+UpgradeCost = Array[Object]([SubResource("Resource_f6sid")])
+Modifiers = Array[Object]([SubResource("Resource_ci8lc")])
+
+[sub_resource type="Resource" id="Resource_yq2q1"]
+script = ExtResource("1_6lwrk")
+TargetResource = 1
+ModType = 1
+ModValue = 0.05
+
+[sub_resource type="Resource" id="Resource_0yqe0"]
+script = ExtResource("1_aoil5")
+Type = 1
+Amount = 300
+
+[sub_resource type="Resource" id="Resource_84v33"]
+script = ExtResource("1_y3fwg")
+Id = &"tech2"
+RequiredUpgradeIds = PackedStringArray("tech1")
+DisplayName = "Super Focus"
+UpgradeType = 1
+Position = Vector2i(1, 2)
+UpgradeCost = Array[Object]([SubResource("Resource_0yqe0")])
+Modifiers = Array[Object]([SubResource("Resource_yq2q1")])
+
+[sub_resource type="Resource" id="Resource_ppfwp"]
+script = ExtResource("1_6lwrk")
+TargetResource = 1
+ModType = 1
+ModValue = 0.075
+
+[sub_resource type="Resource" id="Resource_3o8gq"]
+script = ExtResource("1_aoil5")
+Type = 1
+Amount = 800
+
+[sub_resource type="Resource" id="Resource_ofqm7"]
+script = ExtResource("1_y3fwg")
+Id = &"tech3"
+RequiredUpgradeIds = PackedStringArray("tech2")
+DisplayName = "Ascended Focus"
+UpgradeType = 1
+Position = Vector2i(2, 2)
+UpgradeCost = Array[Object]([SubResource("Resource_3o8gq")])
+Modifiers = Array[Object]([SubResource("Resource_ppfwp")])
+
+[sub_resource type="Resource" id="Resource_qx51f"]
+script = ExtResource("1_6lwrk")
+TargetResource = 0
+ModType = 1
+ModValue = 0.5
+
+[sub_resource type="Resource" id="Resource_5m0fb"]
+script = ExtResource("1_aoil5")
+Type = 1
+Amount = 1
+
+[sub_resource type="Resource" id="Resource_5h7gd"]
+script = ExtResource("1_y3fwg")
+Id = &"debug1"
+RequiredUpgradeIds = PackedStringArray()
+DisplayName = "(Debug) x50% Wood"
+UpgradeType = 0
+Position = Vector2i(-2, 0)
+UpgradeCost = Array[Object]([SubResource("Resource_5m0fb")])
+Modifiers = Array[Object]([SubResource("Resource_qx51f")])
+
+[sub_resource type="Resource" id="Resource_on4yk"]
+script = ExtResource("1_6lwrk")
+TargetResource = 1
+ModType = 1
+ModValue = 0.5
+
+[sub_resource type="Resource" id="Resource_emcwn"]
+script = ExtResource("1_aoil5")
+Type = 1
+Amount = 1
+
+[sub_resource type="Resource" id="Resource_duq5e"]
+script = ExtResource("1_y3fwg")
+Id = &"debug2"
+RequiredUpgradeIds = PackedStringArray()
+DisplayName = "Debug (50%) Tech"
+UpgradeType = 1
+Position = Vector2i(-2, -2)
+UpgradeCost = Array[Object]([SubResource("Resource_emcwn")])
+Modifiers = Array[Object]([SubResource("Resource_on4yk")])
 
 [resource]
 script = ExtResource("1_w3jw2")
-_upgrades = Array[Object]([SubResource("Resource_u5ita"), SubResource("Resource_6yjmq"), SubResource("Resource_8r20m"), SubResource("Resource_2si4o"), SubResource("Resource_hrh4c"), SubResource("Resource_7uvla"), SubResource("Resource_5seq2"), SubResource("Resource_uau7l"), SubResource("Resource_2ep4g")])
+_upgrades = Array[Object]([SubResource("Resource_b43ew"), SubResource("Resource_l4qjo"), SubResource("Resource_svdyu"), SubResource("Resource_novj8"), SubResource("Resource_rlxob"), SubResource("Resource_g3snp"), SubResource("Resource_bgimb"), SubResource("Resource_mobq8"), SubResource("Resource_84v33"), SubResource("Resource_ofqm7"), SubResource("Resource_5h7gd"), SubResource("Resource_duq5e")])

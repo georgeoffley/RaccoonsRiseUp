@@ -1,34 +1,40 @@
 ﻿namespace RRU;
 
-public partial class Game
+[GlobalClass]
+public sealed partial class JobData: Resource, IResourceModifier
 {
-    Dictionary<JobType, JobData> jobData = new()
-    {
-        {
-            JobType.Woodcutter, new JobData
-            {
-                ResourceType = ResourceType.Wood,
-                GatherRate = 1,
-                GatherAmount = 1
-            }
-        },
-        {
-            JobType.Researcher, new JobData
-            {
-                ResourceType = ResourceType.Tech,
-                GatherRate = 1,
-                GatherAmount = 1
-            }
-        }
-    };
-}
+    [Export] public JobType Job;
+    [Export] public ResourceType ResourceType;
 
-public class JobData
-{
-    public ResourceType ResourceType { get; set; }
-    public double ElpasedTime { get; set; }
-    public double GatherRate { get; set; }
-    public double GatherAmount { get; set; }
+    [Export] double gatherRate;
+    [Export] double gatherAmount;
+
+    double elapsedTime;
+
+    /// Resource Modifier ///
+
+    public bool ModifierIsActive(GameState context, double delta)
+    {
+        if (context.Jobs[Job] == 0)
+            return false;
+
+        elapsedTime += delta;
+
+        if (elapsedTime < gatherRate)
+            return false;
+
+        elapsedTime = 0.0f;
+        return true;
+    }
+
+    public void ModifierGet(GameState context, ref ResourceModifier modifier)
+    {
+        modifier = new(
+            ResourceType,
+            ResourceModifierType.Additive,
+            gatherAmount * context.Jobs[Job]
+        );
+    }
 }
 
 public enum JobType
