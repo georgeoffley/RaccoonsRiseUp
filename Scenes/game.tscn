@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://c3vhl3m2xg1jg"]
+[gd_scene load_steps=15 format=3 uid="uid://c3vhl3m2xg1jg"]
 
 [ext_resource type="Script" path="res://Scripts/Game/Game.cs" id="1_i188o"]
 [ext_resource type="PackedScene" uid="uid://lv08ttqpvfes" path="res://Scenes/info.tscn" id="1_lxhla"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://bwyp57e85ufa0" path="res://Sprites/Tilesets/basictiles.png" id="6_lwov1"]
 [ext_resource type="Script" path="res://Scripts/World.cs" id="6_ub1nu"]
 [ext_resource type="PackedScene" uid="uid://ccyv0c2rj7ly1" path="res://Scenes/Prefabs/UI/ui_tech_node_info.tscn" id="7_xo228"]
+[ext_resource type="PackedScene" uid="uid://c6pism2kgjr5c" path="res://Scenes/Prefabs/UI/popup_menu.tscn" id="10_bjrvn"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_qtnpn"]
 texture = ExtResource("6_lwov1")
@@ -235,7 +236,6 @@ pageJobs = NodePath("TabContainer/Jobs")
 layout_mode = 2
 
 [node name="Info" parent="TabContainer" instance=ExtResource("1_lxhla")]
-visible = false
 layout_mode = 2
 
 [node name="Jobs" parent="TabContainer" instance=ExtResource("2_vouy1")]
@@ -243,6 +243,7 @@ visible = false
 layout_mode = 2
 
 [node name="Tech" type="HSplitContainer" parent="TabContainer"]
+visible = false
 layout_mode = 2
 dragger_visibility = 2
 
@@ -257,8 +258,8 @@ stretch = true
 
 [node name="SubViewport" type="SubViewport" parent="TabContainer/Tech/HSplitContainer/Canvas" node_paths=PackedStringArray("detailsView")]
 handle_input_locally = false
-size = Vector2i(1152, 617)
-render_target_update_mode = 4
+size = Vector2i(2, 2)
+render_target_update_mode = 0
 script = ExtResource("4_ymnje")
 techNodeSpacing = 30
 techData = ExtResource("5_g65f1")
@@ -272,9 +273,10 @@ Speed = 25.0
 ZoomIncrementDefault = 0.1
 MinZoom = 0.4
 
-[node name="TechNodeInfo" parent="TabContainer/Tech/HSplitContainer" node_paths=PackedStringArray("_splitView") instance=ExtResource("7_xo228")]
+[node name="TechNodeInfo" parent="TabContainer/Tech/HSplitContainer" node_paths=PackedStringArray("splitView") instance=ExtResource("7_xo228")]
 layout_mode = 2
-_splitView = NodePath("..")
+dataService = ExtResource("5_g65f1")
+splitView = NodePath("..")
 
 [node name="World" type="SubViewportContainer" parent="TabContainer"]
 visible = false
@@ -304,3 +306,7 @@ Speed = 3.0
 ZoomIncrementDefault = 0.1
 MinZoom = 2.0
 MaxZoom = 5.0
+
+[node name="UIPopupMenu" parent="." instance=ExtResource("10_bjrvn")]
+visible = false
+layout_mode = 2

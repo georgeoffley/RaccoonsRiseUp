@@ -1,13 +1,11 @@
-[gd_scene load_steps=3 format=3 uid="uid://ccyv0c2rj7ly1"]
+[gd_scene load_steps=2 format=3 uid="uid://ccyv0c2rj7ly1"]
 
 [ext_resource type="Script" path="res://Scripts/UI/TechNodeDetails.cs" id="1_0kyk4"]
-[ext_resource type="Resource" uid="uid://bq25wiv36tld1" path="res://Resources/res_shared_data_service.tres" id="2_67llv"]
 
 [node name="TechNodeInfo" type="Panel"]
 offset_right = 300.0
 offset_bottom = 400.0
 script = ExtResource("1_0kyk4")
-_dataService = ExtResource("2_67llv")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -72,15 +70,15 @@ size_flags_vertical = 3
 layout_mode = 2
 alignment = 1
 
-[node name="LearnState" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="ResearchState" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Not Learned"
+text = "NOT_RESEARCHED"
 
-[node name="BtnLearn" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="BtnResearch" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(80, 33)
 layout_mode = 2
 focus_mode = 0
-text = "Learn"
+text = "RESEARCH"

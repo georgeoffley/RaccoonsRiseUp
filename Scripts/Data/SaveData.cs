@@ -6,5 +6,5 @@ public partial class SaveData
     public Dictionary<JobType, int> NumJobs { get; set; }
     public Dictionary<ResourceType, double> NumResources { get; set; }
     public Dictionary<StructureType, int> NumStructures { get; set; }
-    public string[] LearnedUpgrades { get; set; }
+    public string[] ResearchedUpgrades { get; set; }
 }

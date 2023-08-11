@@ -1,25 +1,24 @@
 namespace RRU;
 
+public class TechNodeClickedInfo
+{
+    public Vector2 Position { get; set; }
+    public TechInfo TechInfo { get; set; }
+}
+
 public partial class UITechNode : Control
 {
-    private const int DescriptionFontSize = 32;
-    private const int DescriptionOffset = 125;
+    static Color RESEARCHED_COLOUR => new(0.3f, 1.0f, 0.3f, 0.5f);
+    static Color LOCKED_COLOUR => new(1.0f, 0.3f, 0.3f, 0.35f);
 
-    private static Color LearnedColour
-        => new(0.3f, 1.0f, 0.3f, 0.5f);
+    public event Action<TechNodeClickedInfo> ClickedOnNode;
 
-    private static Color LockedColour
-        => new(1.0f, 0.3f, 0.3f, 0.35f);
-
-    public static event Action<Vector2> ClickedOnNode;
-
-    [Signal]
-    public delegate void ShowDetailRequestEventHandler(TechInfo info);
-
-    private TextureRect textureRect;
+    const int DESCRIPTION_FONT_SIZE = 32;
+    const int DESCRIPTION_OFFSET = 125;
 
     public bool IsActive { get; set; }
 
+    TextureRect textureRect;
     TechNodeState nodeState;
     GTween tweenScale;
     TechInfo info;
@@ -41,22 +40,22 @@ public partial class UITechNode : Control
         textureRect.Texture = info.Data.GetImage();
     }
 
-    public void SetLearnState(TechNodeState state)
+    public void SetResearchState(TechNodeState state)
     {
         nodeState = state;
 
         switch (state)
         {
             case TechNodeState.Locked:
-                textureRect.Modulate = LockedColour;
+                textureRect.Modulate = LOCKED_COLOUR;
                 break;
 
             case TechNodeState.Unlocked:
                 textureRect.Modulate = Colors.White;
                 break;
 
-            case TechNodeState.Learned:
-                textureRect.Modulate = LearnedColour;
+            case TechNodeState.Researched:
+                textureRect.Modulate = RESEARCHED_COLOUR;
                 break;
         }
     }
@@ -81,21 +80,21 @@ public partial class UITechNode : Control
 
     /// Signal Handlers ///
 
-    public void OnLearnStateChanged(TechDataService service, StringName id, bool isLearned)
+    public void OnResearchStateChanged(TechDataService service, StringName id, bool isResearched)
     {
-        if (nodeState == TechNodeState.Learned)
+        if (nodeState == TechNodeState.Researched)
             return;
 
         bool isUnlocked = service.IsUnlocked(info.Id);
-        SetLearnState(isUnlocked ? TechNodeState.Unlocked : TechNodeState.Locked);
+        SetResearchState(isUnlocked ? TechNodeState.Unlocked : TechNodeState.Locked);
 
-        if (info.Id != id || !isLearned)
+        if (info.Id != id || !isResearched)
             return;
 
-        SetLearnState(TechNodeState.Learned);
+        SetResearchState(TechNodeState.Researched);
     }
 
-    private void OnHoverEnter()
+    void OnHoverEnter()
     {
         if (UITech.TechNodeActive)
             return;
@@ -105,7 +104,7 @@ public partial class UITechNode : Control
             duration: 0.1);
     }
 
-    private void OnHoverExit()
+    void OnHoverExit()
     {
         if (UITech.TechNodeActive)
             return;
@@ -115,7 +114,7 @@ public partial class UITechNode : Control
             duration: 0.1);
     }
 
-    private void OnGuiInput(InputEvent @event)
+    void OnGuiInput(InputEvent @event)
     {
         if (IsActive ||
             @event is not InputEventMouseButton mouse ||
@@ -134,8 +133,11 @@ public partial class UITechNode : Control
             duration: 0.2
         );
 
-        ClickedOnNode?.Invoke(Position + Size / 2);
-        EmitSignal(SignalName.ShowDetailRequest, info);
+        ClickedOnNode?.Invoke(new TechNodeClickedInfo
+        {
+            Position = Position + Size / 2,
+            TechInfo = info
+        });
 
         GetViewport().SetInputAsHandled();
     }
@@ -145,5 +147,5 @@ public enum TechNodeState
 {
     Locked,
     Unlocked,
-    Learned
+    Researched
 }

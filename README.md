@@ -9,14 +9,16 @@ Text-based game taking inspiration from Kittens Game and Forager.
 - [x] Each resource has its own unique gather rate and amount
 - [x] Game data is saved on exit
 - [x] Map page
+- [x] Tech page
 - [ ] Structure page
-- [ ] Tech nodes (WIP)
 
 ## Contributing
 Please have a look at the [projects current issues](https://github.com/valkyrienyanko/RaccoonsRiseUp/issues). If you have any questions talk to `valk2023` on Discord.
 
 ## Credit
-Huge shoutout to [perikiyoxd](https://github.com/perikiyoxd), they helped me figure out a much better approach by utilizing `_Process(double delta)` for accumulating resources per their respective rates. If it wasn't for them I would still be using Godot timers going down a very different unneedingly complex path.
+Shoutout to [perikiyoxd](https://github.com/perikiyoxd), they helped me figure out a much better approach by utilizing `_Process(double delta)` for accumulating resources per their respective rates. If it wasn't for them I would still be using Godot timers going down a very different unneedingly complex path.
+
+Thank you to [SadColourfulHues](https://github.com/SadColourfulHues) for really cleaning up the tech page and adding several more features to it.
 
 ### Assets
 "[Game Icons](https://game-icons.net/)" by [Lorc](https://lorcblog.blogspot.com/), [Delapouite](https://delapouite.com/) & [contributors](https://game-icons.net/about.html#authors) licensed [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/)

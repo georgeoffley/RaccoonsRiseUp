@@ -32,10 +32,13 @@ public partial class Game : Node
         { StructureType.ResearchCamp, 0 }
     };
 
-    public override void _Ready()
+    public override void _EnterTree()
     {
         LoadGame();
+    }
 
+    public override void _Ready()
+    {
         pageInfo.Raccoons = Raccoons;
         pageJobs.Raccoons = Raccoons;
 
@@ -63,7 +66,7 @@ public partial class Game : Node
             NumJobs = numJobs,
             NumResources = numResources,
             NumStructures = numStructures,
-            LearnedUpgrades = techData.Serialise()
+            ResearchedUpgrades = techData.Serialise()
         };
 
         var content = JsonConvert.SerializeObject(saveData, Formatting.Indented);
@@ -87,9 +90,9 @@ public partial class Game : Node
         numResources = saveData.NumResources;
         numStructures = saveData.NumStructures;
 
-        if (saveData.LearnedUpgrades != null)
+        if (saveData.ResearchedUpgrades != null)
         {
-            techData.Deserialise(saveData.LearnedUpgrades);
+            techData.Deserialise(saveData.ResearchedUpgrades);
         }
 
         ResourcesChanged?.Invoke(numResources);

@@ -2,12 +2,12 @@ namespace RRU;
 
 public partial class UITech : SubViewport
 {
+    public static bool TechNodeActive { get; set; }
+
     [Export] int techNodeSpacing;
 
     [Export] TechDataService techData;
     [Export] TechNodeDetails detailsView;
-
-    public static bool TechNodeActive { get; set; }
 
     Camera2D camera;
     ColorRect overlay; // transparent overlay
@@ -19,19 +19,7 @@ public partial class UITech : SubViewport
         camera = GetNode<Camera2D>("Camera2D");
 
         CreateTransparentOverlay();
-        CallDeferred(MethodName.AddTechNodes);
-
-        UITechNode.ClickedOnNode += techNodePos =>
-        {
-            // Camera moves to the tech node that was clicked
-            tweenCamera = new GTween(camera);
-            tweenCamera.Animate("position", techNodePos, 0.5)
-                .SetTrans(Tween.TransitionType.Sine);
-
-            // Animate overlay to a nice dark transparent background
-            tweenOverlayColor = new GTween(overlay);
-            tweenOverlayColor.Animate("color", new Color(0, 0, 0, 0.8f), 0.2);
-        };
+        AddTechNodes();
     }
 
     public override void _Input(InputEvent @event)
@@ -54,8 +42,9 @@ public partial class UITech : SubViewport
                 return;
 
             UITechNode activeTechNode = FindActiveTechNode();
+            Vector2 globalMousePos = activeTechNode.GetGlobalMousePosition();
 
-            if (!activeTechNode.GetRect().HasPoint(activeTechNode.GetGlobalMousePosition()))
+            if (!activeTechNode.GetRect().HasPoint(globalMousePos))
             {
                 // Clicked outside of active tech node
                 DeactivateTechNode(activeTechNode);
@@ -118,7 +107,7 @@ public partial class UITech : SubViewport
         tweenOverlayColor = new GTween(overlay);
         tweenOverlayColor.Animate("color", new Color(0, 0, 0, 0), 0.2);
 
-        CallDeferred(MethodName.HideDetails);
+        HideDetails();
     }
 
     void AddTech(StringName id, float modifier, TechType techType, int x, int y)
@@ -126,14 +115,26 @@ public partial class UITech : SubViewport
         var techNode = Prefabs.TechNode.Instantiate<UITechNode>();
         TechInfo techInfo = TechInfo.FromType(id, modifier, techType);
 
+        techNode.ClickedOnNode += techInfo =>
+        {
+            // Camera moves to the tech node that was clicked
+            tweenCamera = new GTween(camera);
+            tweenCamera.Animate("position", techInfo.Position, 0.5)
+                .SetTrans(Tween.TransitionType.Sine);
+
+            // Animate overlay to a nice dark transparent background
+            tweenOverlayColor = new GTween(overlay);
+            tweenOverlayColor.Animate("color", new Color(0, 0, 0, 0.8f), 0.2);
+        };
+
         AddChild(techNode);
         techNodes.Add(techNode);
 
         // Open the details view when a tech node has been activated
-        techNode.ShowDetailRequest += detailsView.OnShowDetailRequested;
-        techData.LearnStateUpdated += techNode.OnLearnStateChanged;
+        techNode.ClickedOnNode += detailsView.OnShowDetailRequested;
+        techData.ResearchStateUpdated += techNode.OnResearchStateChanged;
 
-        techNode.CallDeferred(UITechNode.MethodName.Setup, techInfo);
+        techNode.Setup(techInfo);
 
         // Must do this after AddChild(...) otherwise techNode.Size will
         // not be accurate
@@ -144,15 +145,13 @@ public partial class UITech : SubViewport
             new Vector2(x, y) * (techNode.Size + spacing) - offset;
 
         // Set node state
-        TechNodeState nodeState = techData.IsLearned(id) ? TechNodeState.Learned : TechNodeState.Locked;
+        TechNodeState nodeState = techData.IsResearched(id) ? 
+            TechNodeState.Researched : TechNodeState.Locked;
 
-        if (nodeState == TechNodeState.Locked &&
-            techData.IsUnlocked(id))
-        {
+        if (nodeState == TechNodeState.Locked && techData.IsUnlocked(id))
             nodeState = TechNodeState.Unlocked;
-        }
 
-        techNode.CallDeferred(UITechNode.MethodName.SetLearnState, (int) nodeState);
+        techNode.SetResearchState(nodeState);
     }
 
     void HideDetails()
@@ -163,10 +162,4 @@ public partial class UITech : SubViewport
 
         detailsView.OnHideRequested();
     }
-
-    /*public override void _Draw()
-    {
-        DrawLine(new Vector2(-1000, 0), new Vector2(1000, 0), Colors.White, 2);
-        DrawLine(new Vector2(0, -1000), new Vector2(0, 1000), Colors.White, 2);
-    }*/
 }
