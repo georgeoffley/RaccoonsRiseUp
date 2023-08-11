@@ -107,7 +107,7 @@ public partial class UITech : SubViewport
         tweenOverlayColor = new GTween(overlay);
         tweenOverlayColor.Animate("color", new Color(0, 0, 0, 0), 0.2);
 
-        CallDeferred(MethodName.HideDetails);
+        HideDetails();
     }
 
     void AddTech(StringName id, float modifier, TechType techType, int x, int y)
