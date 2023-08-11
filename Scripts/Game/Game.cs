@@ -4,33 +4,12 @@ using Newtonsoft.Json;
 
 public partial class Game : Node
 {
-    public static int Raccoons { get; set; } = 30;
-
-    public static event Action<Dictionary<ResourceType, double>> ResourcesChanged;
-    public static event Action<Dictionary<JobType, int>> JobsChanged;
+    [Export] GameState gameState;
 
     [Export] TechDataService techData;
 
     [Export] UIInfo pageInfo;
     [Export] UIJobs pageJobs;
-
-    static Dictionary<JobType, int> numJobs = new()
-    {
-        { JobType.Woodcutter, 0 },
-        { JobType.Researcher, 0 }
-    };
-
-    static Dictionary<ResourceType, double> numResources = new()
-    {
-        { ResourceType.Wood, 0 },
-        { ResourceType.Tech, 0 }
-    };
-
-    static Dictionary<StructureType, int> numStructures = new()
-    {
-        { StructureType.LumberCamp, 0 },
-        { StructureType.ResearchCamp, 0 }
-    };
 
     public override void _EnterTree()
     {
@@ -39,21 +18,6 @@ public partial class Game : Node
 
     public override void _Ready()
     {
-        pageInfo.Raccoons = Raccoons;
-        pageJobs.Raccoons = Raccoons;
-
-        UIJob.RaccoonAssigned += job =>
-        {
-            numJobs[job]++;
-            Raccoons--;
-        };
-
-        UIJob.RaccoonUnassigned += job =>
-        {
-            numJobs[job]--;
-            Raccoons++;
-        };
-
         GetNode<Global>(Global.GetNodePath)
             .OnQuitRequest += SaveGame;
     }
@@ -62,10 +26,10 @@ public partial class Game : Node
     {
         var saveData = new SaveData
         {
-            Raccoons = Raccoons,
-            NumJobs = numJobs,
-            NumResources = numResources,
-            NumStructures = numStructures,
+            Raccoons = gameState.Raccoons,
+            NumJobs = gameState.Jobs,
+            NumResources = gameState.Resources,
+            NumStructures = gameState.Structures,
             ResearchedUpgrades = techData.Serialise()
         };
 
@@ -85,18 +49,19 @@ public partial class Game : Node
         string content = file.GetAsText();
 
         var saveData = JsonConvert.DeserializeObject<SaveData>(content);
-        Raccoons = saveData.Raccoons;
-        numJobs = saveData.NumJobs;
-        numResources = saveData.NumResources;
-        numStructures = saveData.NumStructures;
+
+        gameState.Raccoons = saveData.Raccoons;
+        gameState.Jobs = saveData.NumJobs;
+        gameState.Resources = saveData.NumResources;
+        gameState.Structures = saveData.NumStructures;
 
         if (saveData.ResearchedUpgrades != null)
         {
             techData.Deserialise(saveData.ResearchedUpgrades);
         }
 
-        ResourcesChanged?.Invoke(numResources);
-        JobsChanged?.Invoke(numJobs);
+        gameState.UpdateResources();
+        gameState.UpdateJobs();
     }
 
     public override void _PhysicsProcess(double delta)
@@ -107,7 +72,7 @@ public partial class Game : Node
         ResourcesGainedByJobs(delta, ref resourcesChanged);
 
         if (resourcesChanged)
-            ResourcesChanged?.Invoke(numResources);
+            gameState.UpdateResources();
     }
 
     void ResourcesGainedByStructures(double delta, ref bool resourcesChanged)
@@ -116,7 +81,7 @@ public partial class Game : Node
         {
             var structureData = structure.Value;
 
-            if (numStructures[structure.Key] == 0)
+            if (gameState.Structures[structure.Key] == 0)
                 continue;
 
             structureData.Resources.ForEach(x => x.Value.ElpasedTime += delta);
@@ -129,7 +94,10 @@ public partial class Game : Node
                     var timesEarned = resourceData.ElpasedTime / resourceData.GatherRate;
 
                     resourceData.ElpasedTime -= resourceData.GatherRate * timesEarned;
-                    numResources[resource.Key] += resourceData.GatherAmount * timesEarned * numStructures[structure.Key];
+
+                    gameState.Resources[resource.Key] +=
+                        resourceData.GatherAmount * timesEarned * gameState.Structures[structure.Key];
+
                     resourcesChanged = true;
                 }
             }
@@ -142,7 +110,7 @@ public partial class Game : Node
         {
             var jobData = job.Value;
 
-            if (numJobs[job.Key] == 0)
+            if (gameState.Jobs[job.Key] == 0)
                 continue;
 
             jobData.ElpasedTime += delta;
@@ -152,7 +120,10 @@ public partial class Game : Node
                 var timesEarned = jobData.ElpasedTime / jobData.GatherRate;
 
                 jobData.ElpasedTime -= jobData.GatherRate * timesEarned;
-                numResources[jobData.ResourceType] += jobData.GatherAmount * timesEarned * numJobs[job.Key];
+
+                gameState.Resources[jobData.ResourceType] +=
+                    jobData.GatherAmount * timesEarned * gameState.Jobs[job.Key];
+
                 resourcesChanged = true;
             }
         }

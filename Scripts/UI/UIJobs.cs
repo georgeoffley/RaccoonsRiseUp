@@ -2,6 +2,8 @@ namespace RRU;
 
 public partial class UIJobs : Node
 {
+    [Export] GameState gameState;
+
     [Export] Label labelRaccoons;
     [Export] GridContainer grid;
 
@@ -13,8 +15,7 @@ public partial class UIJobs : Node
 
     public override void _Ready()
     {
-        AddJob(JobType.Woodcutter);
-        AddJob(JobType.Researcher);
+        Raccoons = gameState.Raccoons;
 
         UIJob.RaccoonAssigned += job =>
         {
@@ -25,11 +26,20 @@ public partial class UIJobs : Node
         {
             Raccoons++;
         };
+
+        ReadOnlySpan<JobType> jobs = default;
+        gameState.GetJobTypes(ref jobs);
+
+        for (int i = 0; i < jobs.Length; ++ i)
+        {
+            AddJob(jobs[i]);
+        }
     }
 
     void AddJob(JobType job)
     {
         var jobPrefab = (UIJob)Prefabs.Job.Instantiate();
+
         jobPrefab.Job = job;
         grid.AddChild(jobPrefab);
     }

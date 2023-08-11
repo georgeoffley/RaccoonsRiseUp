@@ -145,7 +145,7 @@ public partial class UITech : SubViewport
             new Vector2(x, y) * (techNode.Size + spacing) - offset;
 
         // Set node state
-        TechNodeState nodeState = techData.IsResearched(id) ? 
+        TechNodeState nodeState = techData.IsResearched(id) ?
             TechNodeState.Researched : TechNodeState.Locked;
 
         if (nodeState == TechNodeState.Locked && techData.IsUnlocked(id))
@@ -154,8 +154,13 @@ public partial class UITech : SubViewport
         techNode.SetResearchState(nodeState);
     }
 
-    void HideDetails()
+    async void HideDetails()
     {
+        // (Fixes the tween blink when switching between two nodes)
+        // 'CallDeferred' was used to delay this to ensure that it has the proper reference,
+        // Since that is no longer allowed, this does quite literally the exact same thing.
+        await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+
         // No need to hide the details view if the user only switches context
         if (IsInstanceValid(FindActiveTechNode()))
             return;

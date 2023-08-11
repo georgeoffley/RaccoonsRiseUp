@@ -1,7 +1,8 @@
-[gd_scene load_steps=15 format=3 uid="uid://c3vhl3m2xg1jg"]
+[gd_scene load_steps=16 format=3 uid="uid://c3vhl3m2xg1jg"]
 
 [ext_resource type="Script" path="res://Scripts/Game/Game.cs" id="1_i188o"]
 [ext_resource type="PackedScene" uid="uid://lv08ttqpvfes" path="res://Scenes/info.tscn" id="1_lxhla"]
+[ext_resource type="Resource" uid="uid://7lt0byaqcwg6" path="res://Resources/res_shared_game_state.tres" id="2_tndqm"]
 [ext_resource type="PackedScene" uid="uid://dguahjnd1njnr" path="res://Scenes/jobs.tscn" id="2_vouy1"]
 [ext_resource type="Script" path="res://Scripts/UI/UITech.cs" id="4_ymnje"]
 [ext_resource type="Resource" uid="uid://bq25wiv36tld1" path="res://Resources/res_shared_data_service.tres" id="5_g65f1"]
@@ -228,6 +229,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_i188o")
+gameState = ExtResource("2_tndqm")
 techData = ExtResource("5_g65f1")
 pageInfo = NodePath("TabContainer/Info")
 pageJobs = NodePath("TabContainer/Jobs")
@@ -237,10 +239,12 @@ layout_mode = 2
 
 [node name="Info" parent="TabContainer" instance=ExtResource("1_lxhla")]
 layout_mode = 2
+gameState = ExtResource("2_tndqm")
 
 [node name="Jobs" parent="TabContainer" instance=ExtResource("2_vouy1")]
 visible = false
 layout_mode = 2
+gameState = ExtResource("2_tndqm")
 
 [node name="Tech" type="HSplitContainer" parent="TabContainer"]
 visible = false

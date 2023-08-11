@@ -8,6 +8,7 @@ public sealed partial class TechUpgradeInfo : Resource
 {
     [Export] public StringName Id;
     [Export] public string[] RequiredUpgradeIds;
+    [Export] public ResourceRequirement[] UpgradeCost;
     [Export] public string DisplayName;
     [Export] public TechType UpgradeType;
     [Export] public float Modifier;

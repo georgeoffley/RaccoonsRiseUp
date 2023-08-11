@@ -71,6 +71,9 @@ public sealed partial class TechDataService : Resource
 
     public TechUpgradeInfo GetInfoForId(StringName id)
     {
+        if (id == null)
+            return null;
+
         ReadOnlySpan<TechUpgradeInfo> upgrades = _upgrades;
 
         for (int i = 0; i < upgrades.Length; ++i)
