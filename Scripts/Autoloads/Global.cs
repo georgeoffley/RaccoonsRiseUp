@@ -10,9 +10,11 @@ global using System.Threading;
 global using System.Text.RegularExpressions;
 global using System.Threading.Tasks;
 
+#region Using Definitions
 global using JobDict = System.Collections.Generic.Dictionary<RRU.JobType, int>;
 global using StructureDict = System.Collections.Generic.Dictionary<RRU.StructureType, int>;
 global using ResourceDict = System.Collections.Generic.Dictionary<RRU.ResourceType, double>;
+#endregion
 
 namespace RRU;
 

@@ -1,7 +1,7 @@
 ﻿namespace RRU;
 
 [GlobalClass]
-public sealed partial class JobData: Resource, IResourceModifier
+public sealed partial class JobData : Resource, IResourceModifier
 {
     [Export] public JobType Job;
     [Export] public ResourceType ResourceType;

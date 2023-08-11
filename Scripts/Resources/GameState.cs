@@ -5,7 +5,7 @@ namespace RRU;
 /// application without needing direct references to one another.
 /// </summary>
 [GlobalClass]
-public sealed partial class GameState: Resource
+public sealed partial class GameState : Resource
 {
     public event Action<ResourceDict> ResourcesChanged;
     public event Action<JobDict> JobsChanged;
@@ -41,7 +41,7 @@ public sealed partial class GameState: Resource
         // Initialise everything in a single pass
         int l = MaxLen(jobTypes.Length, resourceTypes.Length, structureTypes.Length);
 
-        for (int i = 0; i < l; ++ i)
+        for (int i = 0; i < l; ++i)
         {
             if (i < jobTypes.Length)
             {
@@ -97,8 +97,8 @@ public sealed partial class GameState: Resource
         if (Raccoons <= 0)
             return false;
 
-        Jobs[job] ++;
-        Raccoons --;
+        Jobs[job]++;
+        Raccoons--;
 
         return true;
     }
@@ -108,8 +108,8 @@ public sealed partial class GameState: Resource
         if (Jobs[job] <= 0)
             return false;
 
-        Jobs[job] --;
-        Raccoons ++;
+        Jobs[job]--;
+        Raccoons++;
 
         return true;
     }
@@ -126,7 +126,7 @@ public sealed partial class GameState: Resource
         ReadOnlySpan<int> ints = lengths;
         int max = int.MinValue;
 
-        for (int i = 0; i < ints.Length; ++ i)
+        for (int i = 0; i < ints.Length; ++i)
         {
             if (ints[i] <= max)
                 continue;
@@ -147,7 +147,7 @@ public sealed partial class GameState: Resource
         // Check if all the required materials are present in the inventory
         ReadOnlySpan<ResourceRequirement> requirements = upgrade.UpgradeCost;
 
-        for (int i = 0; i < requirements.Length; ++ i)
+        for (int i = 0; i < requirements.Length; ++i)
         {
             if (HasResource(requirements[i].Type, requirements[i].Amount))
                 continue;
@@ -165,7 +165,7 @@ public sealed partial class GameState: Resource
 
         ReadOnlySpan<ResourceRequirement> requirements = upgrade.UpgradeCost;
 
-        for (int i = 0; i < requirements.Length; ++ i)
+        for (int i = 0; i < requirements.Length; ++i)
         {
             Resources[requirements[i].Type] -= requirements[i].Amount;
         }

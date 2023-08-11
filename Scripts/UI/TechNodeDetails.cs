@@ -1,3 +1,5 @@
+using ENet;
+
 namespace RRU;
 
 public sealed partial class TechNodeDetails : Control
@@ -94,17 +96,12 @@ public sealed partial class TechNodeDetails : Control
     void ClearListView(Control view)
     {
         for (int i = view.GetChildCount(); i --> 0;)
-        {
-            view
-                .GetChild(i)
-                .QueueFree();
-        }
+            view.GetChild(i).QueueFree();
     }
 
     void AppendListItem(Control view, string text)
     {
-        GLabel label = new(text)
-        {
+        GLabel label = new(text) {
             HorizontalAlignment = HorizontalAlignment.Left
         };
 
@@ -154,43 +151,60 @@ public sealed partial class TechNodeDetails : Control
 
         for (int i = 0; i < l; ++ i)
         {
-            if (i < requirements.Length)
-            {
-                TechUpgradeInfo requirementInfo =
-                    dataService.GetInfoForId(requirements[i]);
-
-                AppendListItem(
-                    view: requirementsView,
-                    text: $"* {requirementInfo.DisplayName}"
-                );
-            }
-
-            if (i < cost.Length)
-            {
-                AppendListItem(
-                    view: costView,
-                    text: $"* {cost[i].Type} x{cost[i].Amount}"
-                );
-            }
-
-            if (i < modifiers.Length)
-            {
-                string modLabelText = null;
-
-                switch (modifiers[i].ModType)
-                {
-                    case ResourceModifierType.Additive:
-                        modLabelText = $"* {modifiers[i].TargetResource} Output + {modifiers[i].ModValue}";
-                        break;
-
-                    case ResourceModifierType.Multiplicative:
-                        modLabelText = $"* {modifiers[i].TargetResource} Output + {modifiers[i].ModValue * 100.0:0.0} %";
-                        break;
-                }
-
-                AppendListItem(modifiersView, modLabelText);
-            }
+            UpdateRequirements(i, requirements);
+            UpdateCost(i, cost);
+            UpdateModifiers(i, modifiers);
         }
+    }
+
+    void UpdateRequirements(int i, ReadOnlySpan<string> requirements)
+    {
+        if (i >= requirements.Length)
+            return;
+
+        TechUpgradeInfo requirementInfo =
+            dataService.GetInfoForId(requirements[i]);
+
+        AppendListItem(
+            view: requirementsView,
+            text: $"* {requirementInfo.DisplayName}"
+        );
+    }
+
+    void UpdateCost(int i , ReadOnlySpan<ResourceRequirement> cost)
+    {
+        if (i >= cost.Length)
+            return;
+
+        AppendListItem(
+            view: costView,
+            text: $"* {cost[i].Type} x{cost[i].Amount}"
+        );
+    }
+
+    void UpdateModifiers(int i, ReadOnlySpan<ResourceModifierDefinition> modifiers)
+    {
+        if (i >= modifiers.Length)
+            return;
+
+        string modLabelText = null;
+
+        switch (modifiers[i].ModType)
+        {
+            case ResourceModifierType.Additive:
+                modLabelText = 
+                    $"* {modifiers[i].TargetResource} " +
+                    $"Output + {modifiers[i].ModValue}";
+                break;
+
+            case ResourceModifierType.Multiplicative:
+                modLabelText = 
+                    $"* {modifiers[i].TargetResource} " +
+                    $"Output + {modifiers[i].ModValue * 100.0:0.0} %";
+                break;
+        }
+
+        AppendListItem(modifiersView, modLabelText);
     }
 
     void SetVisibility(bool visible)
@@ -236,7 +250,9 @@ public sealed partial class TechNodeDetails : Control
             return;
         }
 
-        TechUpgradeInfo upgradeInfo = dataService.GetInfoForId(id: info.TechInfo.Id);
+        TechUpgradeInfo upgradeInfo = 
+            dataService.GetInfoForId(id: info.TechInfo.Id);
+
         this.info = info.TechInfo;
 
         SetVisibility(true);
