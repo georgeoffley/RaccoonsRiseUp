@@ -10,26 +10,18 @@ public partial class UIInfo : Node
     [Export] Label labelWood;
     [Export] Label labelTech;
 
-    public int Raccoons
-    {
-        get => int.Parse(labelRaccoons.Text);
-        set => labelRaccoons.Text = value.ToString();
-    }
-
-    Dictionary<JobType, Label> jobs;
-    Dictionary<ResourceType, Label> resources;
+    Dictionary<JobType, Label> jobLabels;
+    Dictionary<ResourceType, Label> resourceLabels;
 
     public override void _Ready()
     {
-        Raccoons = gameState.Raccoons;
-
-        jobs = new()
+        jobLabels = new()
         {
             { JobType.Woodcutter, labelWoodcutters },
             { JobType.Researcher, labelResearchers }
         };
 
-        resources = new()
+        resourceLabels = new()
         {
             [ResourceType.Wood] = labelWood,
             [ResourceType.Tech] = labelTech
@@ -38,12 +30,13 @@ public partial class UIInfo : Node
         gameState.ResourcesChanged += _ => UpdateResourceCounts();
         gameState.JobsChanged += _ => UpdateAllJobCounts();
 
-        UIJob.RaccoonAssigned += UpdateJobCount;
-        UIJob.RaccoonUnassigned += UpdateJobCount;
+        UIJob.RaccoonAssigned += OnUpdateJobcount;
+        UIJob.RaccoonUnassigned += OnUpdateJobcount;
 
         // Initial update
         UpdateResourceCounts();
         UpdateAllJobCounts();
+        UpdateRaccoonsLabel();
     }
 
     /// Event Handlers ///
@@ -57,7 +50,7 @@ public partial class UIInfo : Node
         {
             ResourceType type = resourceTypes[i];
 
-            if (!resources.TryGetValue(type, out Label label))
+            if (!resourceLabels.TryGetValue(type, out Label label))
                 continue;
 
             label.Text = $"{gameState.Resources[type]:0.00}";
@@ -71,15 +64,30 @@ public partial class UIInfo : Node
 
         for (int i = 0; i < jobs.Length; ++ i)
         {
-            UpdateJobCount(jobs[i]);
+            UpdateJobCount(jobs[i], false);
         }
     }
 
-    void UpdateJobCount(JobType job)
+    void OnUpdateJobcount(JobType job)
     {
-        if (!jobs.TryGetValue(job, out Label label))
+        UpdateJobCount(job, true);
+    }
+
+    void UpdateJobCount(JobType job, bool updatesLabel)
+    {
+        if (!jobLabels.TryGetValue(job, out Label label))
             return;
 
         label.Text = gameState.Jobs[job].ToString();
+
+        if (!updatesLabel)
+            return;
+
+        UpdateRaccoonsLabel();
+    }
+
+    void UpdateRaccoonsLabel()
+    {
+        labelRaccoons.Text = gameState.Raccoons.ToString();
     }
 }

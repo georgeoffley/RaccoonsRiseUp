@@ -7,26 +7,8 @@ public partial class UIJobs : Node
     [Export] Label labelRaccoons;
     [Export] GridContainer grid;
 
-    public int Raccoons
-    {
-        get => int.Parse(labelRaccoons.Text);
-        set => labelRaccoons.Text = value.ToString();
-    }
-
     public override void _Ready()
     {
-        Raccoons = gameState.Raccoons;
-
-        UIJob.RaccoonAssigned += job =>
-        {
-            Raccoons--;
-        };
-
-        UIJob.RaccoonUnassigned += job =>
-        {
-            Raccoons++;
-        };
-
         ReadOnlySpan<JobType> jobs = default;
         gameState.GetJobTypes(ref jobs);
 
@@ -34,6 +16,11 @@ public partial class UIJobs : Node
         {
             AddJob(jobs[i]);
         }
+
+        UIJob.RaccoonAssigned += _ => UpdateRaccoonsLabel();
+        UIJob.RaccoonUnassigned += _ => UpdateRaccoonsLabel();
+
+        UpdateRaccoonsLabel();
     }
 
     void AddJob(JobType job)
@@ -42,5 +29,10 @@ public partial class UIJobs : Node
 
         jobPrefab.Job = job;
         grid.AddChild(jobPrefab);
+    }
+
+    void UpdateRaccoonsLabel()
+    {
+        labelRaccoons.Text = gameState.Raccoons.ToString();
     }
 }
