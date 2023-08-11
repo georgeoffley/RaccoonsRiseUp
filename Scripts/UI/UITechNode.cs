@@ -1,17 +1,20 @@
 namespace RRU;
 
+public class TechNodeClickedInfo
+{
+    public Vector2 Position { get; set; }
+    public TechInfo TechInfo { get; set; }
+}
+
 public partial class UITechNode : Control
 {
-    public static event Action<Vector2> ClickedOnNode;
-
     static Color RESEARCHED_COLOUR => new(0.3f, 1.0f, 0.3f, 0.5f);
     static Color LOCKED_COLOUR => new(1.0f, 0.3f, 0.3f, 0.35f);
 
+    public event Action<TechNodeClickedInfo> ClickedOnNode;
+
     const int DESCRIPTION_FONT_SIZE = 32;
     const int DESCRIPTION_OFFSET = 125;
-
-    [Signal]
-    public delegate void ShowDetailRequestEventHandler(TechInfo info);
 
     public bool IsActive { get; set; }
 
@@ -130,8 +133,11 @@ public partial class UITechNode : Control
             duration: 0.2
         );
 
-        ClickedOnNode?.Invoke(Position + Size / 2);
-        EmitSignal(SignalName.ShowDetailRequest, info);
+        ClickedOnNode?.Invoke(new TechNodeClickedInfo
+        {
+            Position = Position + Size / 2,
+            TechInfo = info
+        });
 
         GetViewport().SetInputAsHandled();
     }

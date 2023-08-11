@@ -94,7 +94,6 @@ public sealed partial class TechDataService : Resource
     /// <summary>
     /// Returns an array containing all currently-researched upgrade options.
     /// </summary>
-    /// <returns></returns>
     public string[] Serialise()
     {
         Span<string> upgrades = new string[MaxUpgrades];
@@ -103,7 +102,7 @@ public sealed partial class TechDataService : Resource
         foreach (StringName id in researchedUpgrades)
         {
             upgrades[upgradeIdx] = id;
-            upgradeIdx ++;
+            upgradeIdx++;
         }
 
         return upgrades[..upgradeIdx].ToArray();

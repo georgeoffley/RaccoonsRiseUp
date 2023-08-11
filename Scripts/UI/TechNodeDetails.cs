@@ -115,7 +115,7 @@ public sealed partial class TechNodeDetails : Control
 
     /// Signal Handlers ///
 
-    public void OnShowDetailRequested(TechInfo info)
+    public void OnShowDetailRequested(TechNodeClickedInfo info)
     {
         if (info == null)
         {
@@ -123,17 +123,17 @@ public sealed partial class TechNodeDetails : Control
             return;
         }
 
-        TechUpgradeInfo upgradeInfo = dataService.GetInfoForId(id: info.Id);
-        this.info = info;
+        TechUpgradeInfo upgradeInfo = dataService.GetInfoForId(id: info.TechInfo.Id);
+        this.info = info.TechInfo;
 
         SetVisibility(true);
 
         labelType.Text = upgradeInfo.DisplayName;
 
-        labelDescription.Text = info.Data.Description;
-        icon.Texture = info.Data.GetImage();
+        labelDescription.Text = info.TechInfo.Data.Description;
+        icon.Texture = info.TechInfo.Data.GetImage();
 
-        SetResearchState(dataService.IsResearched(info.Id));
+        SetResearchState(dataService.IsResearched(info.TechInfo.Id));
         UpdateDetails();
     }
 
