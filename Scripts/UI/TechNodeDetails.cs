@@ -192,13 +192,13 @@ public sealed partial class TechNodeDetails : Control
         switch (modifiers[i].ModType)
         {
             case ResourceModifierType.Additive:
-                modLabelText = 
+                modLabelText =
                     $"* {modifiers[i].TargetResource} " +
                     $"Output + {modifiers[i].ModValue}";
                 break;
 
             case ResourceModifierType.Multiplicative:
-                modLabelText = 
+                modLabelText =
                     $"* {modifiers[i].TargetResource} " +
                     $"Output + {modifiers[i].ModValue * 100.0:0.0} %";
                 break;
@@ -250,7 +250,7 @@ public sealed partial class TechNodeDetails : Control
             return;
         }
 
-        TechUpgradeInfo upgradeInfo = 
+        TechUpgradeInfo upgradeInfo =
             dataService.GetInfoForId(id: info.TechInfo.Id);
 
         this.info = info.TechInfo;
