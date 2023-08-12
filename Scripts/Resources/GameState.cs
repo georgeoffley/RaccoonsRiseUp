@@ -39,7 +39,10 @@ public sealed partial class GameState : Resource
         structureTypes = (StructureType[]) Enum.GetValues(typeof(StructureType));
 
         // Initialise everything in a single pass
-        int l = MaxLen(jobTypes.Length, resourceTypes.Length, structureTypes.Length);
+        int l = Math.Max(
+            jobTypes.Length,
+            Math.Max(resourceTypes.Length, structureTypes.Length)
+        );
 
         for (int i = 0; i < l; ++i)
         {
@@ -119,22 +122,6 @@ public sealed partial class GameState : Resource
     public void GetStructureTypes(ref ReadOnlySpan<StructureType> types)
     {
         types = structureTypes;
-    }
-
-    static int MaxLen(params int[] lengths)
-    {
-        ReadOnlySpan<int> ints = lengths;
-        int max = int.MinValue;
-
-        for (int i = 0; i < ints.Length; ++i)
-        {
-            if (ints[i] <= max)
-                continue;
-
-            max = ints[i];
-        }
-
-        return max;
     }
 
     /// Upgrades ///
