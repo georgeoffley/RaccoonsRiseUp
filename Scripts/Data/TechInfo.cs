@@ -3,10 +3,7 @@ namespace RRU;
 /// <summary>
 /// A TechInfo represents an instance of TechData with its own modifiers
 /// </summary>
-
-// RefCounted can be used with Godot methods, unlike regular C# 'object'
-// classes. (e.g. you can use it in signals.)
-public sealed partial class TechInfo : RefCounted
+public sealed partial class TechInfo
 {
     public StringName Id { get; private set; }
     public float Modifier { get; private set; }
@@ -34,7 +31,7 @@ public sealed partial class TechInfo : RefCounted
         // iterator since you're not dealing with an enumerator anymore.
         ReadOnlySpan<TechType> types = Game.TechData.Keys.ToArray();
 
-        for (int i = 0; i < types.Length; ++ i)
+        for (int i = 0; i < types.Length; ++i)
         {
             if (types[i] != type)
                 continue;

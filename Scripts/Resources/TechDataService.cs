@@ -79,13 +79,13 @@ public sealed partial class TechDataService : Resource
         Span<TechUpgradeInfo> researched = new TechUpgradeInfo[allUpgrades.Length];
         int researchIdx = 0;
 
-        for (int i = 0; i < allUpgrades.Length; ++ i)
+        for (int i = 0; i < allUpgrades.Length; ++i)
         {
             if (!researchedUpgrades.Contains(allUpgrades[i].Id))
                 continue;
 
             researched[researchIdx] = allUpgrades[i];
-            researchIdx ++;
+            researchIdx++;
         }
 
         upgrades = researched[..researchIdx];

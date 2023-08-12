@@ -46,7 +46,7 @@ public partial class UIInfo : Node
         ReadOnlySpan<ResourceType> resourceTypes = default;
         gameState.GetResourceTypes(ref resourceTypes);
 
-        for (int i = 0; i < resourceTypes.Length; ++ i)
+        for (int i = 0; i < resourceTypes.Length; ++i)
         {
             ResourceType type = resourceTypes[i];
 
@@ -62,7 +62,7 @@ public partial class UIInfo : Node
         ReadOnlySpan<JobType> jobs = default;
         gameState.GetJobTypes(ref jobs);
 
-        for (int i = 0; i < jobs.Length; ++ i)
+        for (int i = 0; i < jobs.Length; ++i)
         {
             UpdateJobCount(jobs[i], false);
         }

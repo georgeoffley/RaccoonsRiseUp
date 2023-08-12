@@ -29,9 +29,10 @@ public sealed partial class GameState : Resource
         Resources = new();
         Structures = new();
 
-        // Performance cost should be negligible since this should only be called once.
-        // Using this should be more future-proof
-        // as the previous implementation requires someone to update each dictionary
+        // Performance cost should be negligible since this should only
+        // be called once.
+        // Using this should be more future-proof as the previous
+        // implementation requires someone to update each dictionary
         // whenever a new type is added.
 
         jobTypes = (JobType[]) Enum.GetValues(typeof(JobType));

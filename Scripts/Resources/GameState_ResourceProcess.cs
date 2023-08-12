@@ -2,13 +2,17 @@ namespace RRU;
 
 public sealed partial class GameState
 {
-    // Change this depending on the needs of the project, but this should be enough for the time being
-    // Consider increasing it if (tech upgrades count + job type count + structure type count) > current modifier limit
+    // Change this depending on the needs of the project, but this should
+    // be enough for the time being
+    // Consider increasing it if
+    // (tech upgrades count + job type count + structure type count) > current modifier limit
     const int MAX_MODIFIERS = 64;
 
     public void ProcessResourceTick(double delta)
     {
-        Span<IResourceModifier> modifiers = new IResourceModifier[MAX_MODIFIERS];
+        Span<IResourceModifier> modifiers = 
+            new IResourceModifier[MAX_MODIFIERS];
+
         int modifierIdx = 0;
 
         // Add job + structure modifiers
@@ -27,11 +31,16 @@ public sealed partial class GameState
 
         for (int i = 0; i < techUpgrades.Length; ++i)
         {
-            ReadOnlySpan<ResourceModifierDefinition> modifierDefs = techUpgrades[i].Modifiers;
+            ReadOnlySpan<ResourceModifierDefinition> modifierDefs = 
+                techUpgrades[i].Modifiers;
 
             for (int j = 0; j < modifierDefs.Length; ++j)
             {
-                AppendToSpan(modifierDefs[j], delta, ref modifiers, ref modifierIdx);
+                AppendToSpan(
+                    modifierDefs[j], 
+                    delta,
+                    ref modifiers, 
+                    ref modifierIdx);
             }
         }
 
@@ -65,7 +74,8 @@ public sealed partial class GameState
     /// * Multiplier pass *
     /// </para>
     /// <para>
-    /// Iterates through the modifiers list and accumulates the multipliers of each resource types.
+    /// Iterates through the modifiers list and accumulates the multipliers 
+    /// of each resource types.
     /// </para>
     /// </summary>
     void ProcessMultiplicatives(
@@ -107,7 +117,8 @@ public sealed partial class GameState
     /// + Additive Pass +
     /// </para>
     /// <para>
-    /// Iterates through the active modifier list and adds their value to the total resource counts. (Affected by multipliers.)
+    /// Iterates through the active modifier list and adds their value to 
+    /// the total resource counts. (Affected by multipliers.)
     /// </para>
     /// </summary>
     void ProcessAdditives(
@@ -123,7 +134,8 @@ public sealed partial class GameState
             if (modifier.Type != ResourceModifierType.Additive)
                 continue;
 
-            double modTotal = GetMultiplier(multipliers, modifier.Resource) * modifier.Amount;
+            double modTotal = 
+                GetMultiplier(multipliers, modifier.Resource) * modifier.Amount;
 
             Resources[modifier.Resource] =
                 Mathf.Max(0.0f, Resources[modifier.Resource] + modTotal);

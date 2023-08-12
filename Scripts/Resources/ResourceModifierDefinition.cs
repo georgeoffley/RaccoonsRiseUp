@@ -1,7 +1,8 @@
 namespace RRU;
 
 /// <summary>
-/// A resource modifier defines how a resource will be affected by a tech upgrade/structure
+/// A resource modifier defines how a resource will be affected by a tech 
+/// upgrade/structure
 /// </summary>
 [GlobalClass]
 public sealed partial class ResourceModifierDefinition : Resource, IResourceModifier

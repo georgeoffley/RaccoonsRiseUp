@@ -149,7 +149,7 @@ public sealed partial class TechNodeDetails : Control
             Math.Max(requirements.Length, modifiers.Length)
         );
 
-        for (int i = 0; i < l; ++ i)
+        for (int i = 0; i < l; ++i)
         {
             UpdateRequirements(i, requirements);
             UpdateCost(i, cost);

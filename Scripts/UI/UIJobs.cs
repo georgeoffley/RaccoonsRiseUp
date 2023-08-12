@@ -12,12 +12,10 @@ public partial class UIJobs : Node
         ReadOnlySpan<JobType> jobs = default;
         gameState.GetJobTypes(ref jobs);
 
-        for (int i = 0; i < jobs.Length; ++ i)
-        {
+        for (int i = 0; i < jobs.Length; ++i)
             AddJob(jobs[i]);
-        }
 
-        UIJob.RaccoonAssigned += _ => UpdateRaccoonsLabel();
+        UIJob.RaccoonAssigned   += _ => UpdateRaccoonsLabel();
         UIJob.RaccoonUnassigned += _ => UpdateRaccoonsLabel();
 
         UpdateRaccoonsLabel();

@@ -68,7 +68,7 @@ public partial class UITech : SubViewport
         ReadOnlySpan<TechUpgradeInfo> upgrades = default;
         techData.GetAllUpgrades(ref upgrades);
 
-        for (int i = 0; i < upgrades.Length; ++ i)
+        for (int i = 0; i < upgrades.Length; ++i)
         {
             AddTech(
                 id: upgrades[i].Id,
@@ -155,10 +155,10 @@ public partial class UITech : SubViewport
 
     async void HideDetails()
     {
-        // (Fixes the tween blink when switching between two nodes)
-        // 'CallDeferred' was used to delay this to ensure that it has the proper reference,
-        // Since that is no longer allowed, this does quite literally the exact same thing.
-        await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+        // The tech description will blink without waiting for one frame when
+        // switching between tech nodes. An alternative to waiting for one frame
+        // would be to use CallDeferred(...) on HideDetails()
+        await GUtils.WaitOneFrame(this);
 
         // No need to hide the details view if the user only switches context
         if (IsInstanceValid(FindActiveTechNode()))
