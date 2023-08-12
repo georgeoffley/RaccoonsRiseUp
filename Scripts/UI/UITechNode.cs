@@ -86,7 +86,9 @@ public partial class UITechNode : Control
             return;
 
         bool isUnlocked = service.IsUnlocked(info.Id);
-        SetResearchState(isUnlocked ? TechNodeState.Unlocked : TechNodeState.Locked);
+
+        SetResearchState(
+            isUnlocked ? TechNodeState.Unlocked : TechNodeState.Locked);
 
         if (info.Id != id || !isResearched)
             return;

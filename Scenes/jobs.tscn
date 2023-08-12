@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://dguahjnd1njnr"]
+[gd_scene load_steps=3 format=3 uid="uid://dguahjnd1njnr"]
 
 [ext_resource type="Script" path="res://Scripts/UI/UIJobs.cs" id="1_k6fl7"]
+[ext_resource type="Resource" uid="uid://7lt0byaqcwg6" path="res://Resources/res_shared_game_state.tres" id="2_lvkg4"]
 
 [node name="Jobs" type="PanelContainer" node_paths=PackedStringArray("labelRaccoons", "grid")]
 anchors_preset = 15
@@ -9,6 +10,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_k6fl7")
+gameState = ExtResource("2_lvkg4")
 labelRaccoons = NodePath("Margin/VBox/PanelContainer/Margin/HBox/Raccoons")
 grid = NodePath("Margin/VBox/GridContainer")
 

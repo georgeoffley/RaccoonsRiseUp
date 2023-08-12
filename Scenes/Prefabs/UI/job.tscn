@@ -1,11 +1,13 @@
-[gd_scene load_steps=2 format=3 uid="uid://bj2td4mjp6di0"]
+[gd_scene load_steps=3 format=3 uid="uid://bj2td4mjp6di0"]
 
 [ext_resource type="Script" path="res://Scripts/UI/UIJob.cs" id="1_ycc2n"]
+[ext_resource type="Resource" uid="uid://7lt0byaqcwg6" path="res://Resources/res_shared_game_state.tres" id="2_nbegv"]
 
 [node name="Job" type="PanelContainer" node_paths=PackedStringArray("labelName", "labelCount", "btnMinus", "btnPlus")]
 size_flags_horizontal = 0
 size_flags_vertical = 0
 script = ExtResource("1_ycc2n")
+gameState = ExtResource("2_nbegv")
 labelName = NodePath("Margin/HBox/Name")
 labelCount = NodePath("Margin/HBox/Count")
 btnMinus = NodePath("Margin/HBox/Buttons/Minus")

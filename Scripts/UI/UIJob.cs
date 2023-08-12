@@ -2,6 +2,8 @@ namespace RRU;
 
 public partial class UIJob : Node
 {
+    [Export] GameState gameState;
+
     [Export] Label labelName;
     [Export] Label labelCount;
     [Export] Button btnMinus;
@@ -20,41 +22,38 @@ public partial class UIJob : Node
         }
     }
 
-    public int CurEmployedRaccoons
-    {
-        get => int.Parse(labelCount.Text);
-        set => labelCount.Text = value.ToString();
-    }
-
     JobType job;
 
     public override void _Ready()
     {
-        btnMinus.Pressed += () =>
-        {
-            // There are no more raccoons to take away from this job
-            if (CurEmployedRaccoons <= 0)
-                return;
+        btnPlus.Pressed += OnAddPressed;
+        btnMinus.Pressed += OnRemovePressed;
 
-            // Raccoon is no longer employed
-            CurEmployedRaccoons--;
-            RaccoonUnassigned?.Invoke(job);
-        };
+        UpdateCountLabel();
+    }
 
-        btnPlus.Pressed += () =>
-        {
-            // No more raccoons are available to get a job
-            if (Game.Raccoons <= 0)
-                return;
+    void UpdateCountLabel()
+    {
+        labelCount.Text = gameState.Jobs[job].ToString();
+    }
 
-            // Raccoon assigned to job
-            CurEmployedRaccoons++;
-            RaccoonAssigned?.Invoke(job);
-        };
+    /// Event Handlers ///
 
-        Game.JobsChanged += jobs =>
-        {
-            CurEmployedRaccoons = jobs[job];
-        };
+    void OnAddPressed()
+    {
+        if (!gameState.AddJob(job))
+            return;
+
+        UpdateCountLabel();
+        RaccoonAssigned.Invoke(job);
+    }
+
+    void OnRemovePressed()
+    {
+        if (!gameState.RemoveJob(job))
+            return;
+
+        UpdateCountLabel();
+        RaccoonUnassigned.Invoke(job);
     }
 }

@@ -2,56 +2,92 @@ namespace RRU;
 
 public partial class UIInfo : Node
 {
+    [Export] GameState gameState;
+
     [Export] Label labelRaccoons;
     [Export] Label labelWoodcutters;
     [Export] Label labelResearchers;
     [Export] Label labelWood;
     [Export] Label labelTech;
 
-    public int Raccoons
-    {
-        get => int.Parse(labelRaccoons.Text);
-        set => labelRaccoons.Text = value.ToString();
-    }
-
-    Dictionary<JobType, Label> jobs;
+    Dictionary<JobType, Label> jobLabels;
+    Dictionary<ResourceType, Label> resourceLabels;
 
     public override void _Ready()
     {
-        jobs = new()
+        jobLabels = new()
         {
             { JobType.Woodcutter, labelWoodcutters },
             { JobType.Researcher, labelResearchers }
         };
 
-        Game.ResourcesChanged += resources =>
+        resourceLabels = new()
         {
-            labelWood.Text = Mathf.Round(resources[ResourceType.Wood]).ToString();
-            labelTech.Text = Mathf.Round(resources[ResourceType.Tech]).ToString();
+            [ResourceType.Wood] = labelWood,
+            [ResourceType.Tech] = labelTech
         };
 
-        Game.JobsChanged += jobs =>
+        gameState.ResourcesChanged += _ => UpdateResourceCounts();
+        gameState.JobsChanged += _ => UpdateAllJobCounts();
+
+        UIJob.RaccoonAssigned += OnUpdateJobcount;
+        UIJob.RaccoonUnassigned += OnUpdateJobcount;
+
+        // Initial update
+        UpdateResourceCounts();
+        UpdateAllJobCounts();
+        UpdateRaccoonsLabel();
+    }
+
+    /// Event Handlers ///
+
+    void UpdateResourceCounts()
+    {
+        ReadOnlySpan<ResourceType> resourceTypes = default;
+        gameState.GetResourceTypes(ref resourceTypes);
+
+        for (int i = 0; i < resourceTypes.Length; ++i)
         {
-            labelWoodcutters.Text = jobs[JobType.Woodcutter].ToString();
-            labelResearchers.Text = jobs[JobType.Researcher].ToString();
-        };
+            ResourceType type = resourceTypes[i];
 
-        UIJob.RaccoonAssigned += job =>
+            if (!resourceLabels.TryGetValue(type, out Label label))
+                continue;
+
+            label.Text = $"{gameState.Resources[type]:0.00}";
+        }
+    }
+
+    void UpdateAllJobCounts()
+    {
+        ReadOnlySpan<JobType> jobs = default;
+        gameState.GetJobTypes(ref jobs);
+
+        for (int i = 0; i < jobs.Length; ++i)
         {
-            var count = int.Parse(jobs[job].Text);
-            count++;
-            jobs[job].Text = count.ToString();
+            UpdateJobCount(jobs[i], false);
+        }
+    }
 
-            Raccoons--;
-        };
+    void OnUpdateJobcount(JobType job)
+    {
+        UpdateJobCount(job, true);
+    }
 
-        UIJob.RaccoonUnassigned += job =>
-        {
-            var count = int.Parse(jobs[job].Text);
-            count--;
-            jobs[job].Text = count.ToString();
+    void UpdateJobCount(JobType job, bool updatesLabel)
+    {
+        if (!jobLabels.TryGetValue(job, out Label label))
+            return;
 
-            Raccoons++;
-        };
+        label.Text = gameState.Jobs[job].ToString();
+
+        if (!updatesLabel)
+            return;
+
+        UpdateRaccoonsLabel();
+    }
+
+    void UpdateRaccoonsLabel()
+    {
+        labelRaccoons.Text = gameState.Raccoons.ToString();
     }
 }

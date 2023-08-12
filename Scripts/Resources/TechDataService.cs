@@ -69,8 +69,33 @@ public sealed partial class TechDataService : Resource
         upgrades = _upgrades;
     }
 
+    /// <summary>
+    /// Writes to a span pointing to a list of researched tech upgrades
+    /// </summary>
+    public void GetResearchedUpgrades(ref Span<TechUpgradeInfo> upgrades)
+    {
+        ReadOnlySpan<TechUpgradeInfo> allUpgrades = _upgrades;
+
+        Span<TechUpgradeInfo> researched = new TechUpgradeInfo[allUpgrades.Length];
+        int researchIdx = 0;
+
+        for (int i = 0; i < allUpgrades.Length; ++i)
+        {
+            if (!researchedUpgrades.Contains(allUpgrades[i].Id))
+                continue;
+
+            researched[researchIdx] = allUpgrades[i];
+            researchIdx++;
+        }
+
+        upgrades = researched[..researchIdx];
+    }
+
     public TechUpgradeInfo GetInfoForId(StringName id)
     {
+        if (id == null)
+            return null;
+
         ReadOnlySpan<TechUpgradeInfo> upgrades = _upgrades;
 
         for (int i = 0; i < upgrades.Length; ++i)

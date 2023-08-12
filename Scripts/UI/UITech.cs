@@ -68,11 +68,10 @@ public partial class UITech : SubViewport
         ReadOnlySpan<TechUpgradeInfo> upgrades = default;
         techData.GetAllUpgrades(ref upgrades);
 
-        for (int i = 0; i < upgrades.Length; ++ i)
+        for (int i = 0; i < upgrades.Length; ++i)
         {
             AddTech(
                 id: upgrades[i].Id,
-                modifier: upgrades[i].Modifier,
                 techType: upgrades[i].UpgradeType,
                 x: upgrades[i].Position.X,
                 y: upgrades[i].Position.Y
@@ -110,10 +109,10 @@ public partial class UITech : SubViewport
         HideDetails();
     }
 
-    void AddTech(StringName id, float modifier, TechType techType, int x, int y)
+    void AddTech(StringName id, TechType techType, int x, int y)
     {
         var techNode = Prefabs.TechNode.Instantiate<UITechNode>();
-        TechInfo techInfo = TechInfo.FromType(id, modifier, techType);
+        TechInfo techInfo = TechInfo.FromType(id, techType);
 
         techNode.ClickedOnNode += techInfo =>
         {
@@ -145,7 +144,7 @@ public partial class UITech : SubViewport
             new Vector2(x, y) * (techNode.Size + spacing) - offset;
 
         // Set node state
-        TechNodeState nodeState = techData.IsResearched(id) ? 
+        TechNodeState nodeState = techData.IsResearched(id) ?
             TechNodeState.Researched : TechNodeState.Locked;
 
         if (nodeState == TechNodeState.Locked && techData.IsUnlocked(id))
@@ -154,8 +153,13 @@ public partial class UITech : SubViewport
         techNode.SetResearchState(nodeState);
     }
 
-    void HideDetails()
+    async void HideDetails()
     {
+        // The tech description will blink without waiting for one frame when
+        // switching between tech nodes. An alternative to waiting for one frame
+        // would be to use CallDeferred(...) on HideDetails()
+        await GUtils.WaitOneFrame(this);
+
         // No need to hide the details view if the user only switches context
         if (IsInstanceValid(FindActiveTechNode()))
             return;
