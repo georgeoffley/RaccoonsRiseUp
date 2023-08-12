@@ -4,7 +4,7 @@ public sealed partial class GameState
 {
     // Change this depending on the needs of the project, but this should be enough for the time being
     // Consider increasing it if (tech upgrades count + job type count + structure type count) > current modifier limit
-    const int MAX_MODIFIERS = 128;
+    const int MAX_MODIFIERS = 64;
 
     public void ProcessResourceTick(double delta)
     {
@@ -14,9 +14,9 @@ public sealed partial class GameState
         // Add job + structure modifiers
         ReadOnlySpan<JobData> jobs = JobData;
 
-        for (int i = 0; i < jobs.Length; ++ i)
+        for (int i = 0; i < jobs.Length; ++i)
         {
-            AppendToSpan(jobs[i], ref modifiers, ref modifierIdx);
+            AppendToSpan(jobs[i], delta, ref modifiers, ref modifierIdx);
         }
 
         // TODO: Add structure-related instructions once it is implemented
@@ -25,13 +25,13 @@ public sealed partial class GameState
         Span<TechUpgradeInfo> techUpgrades = default;
         dataService.GetResearchedUpgrades(ref techUpgrades);
 
-        for (int i = 0; i < techUpgrades.Length; ++ i)
+        for (int i = 0; i < techUpgrades.Length; ++i)
         {
             ReadOnlySpan<ResourceModifierDefinition> modifierDefs = techUpgrades[i].Modifiers;
 
-            for (int j = 0; j < modifierDefs.Length; ++ j)
+            for (int j = 0; j < modifierDefs.Length; ++j)
             {
-                AppendToSpan(modifierDefs[j], ref modifiers, ref modifierIdx);
+                AppendToSpan(modifierDefs[j], delta, ref modifiers, ref modifierIdx);
             }
         }
 
@@ -39,18 +39,42 @@ public sealed partial class GameState
         EvaluateModifiers(modifiers, delta);
     }
 
+    /// <summary>
+    /// Performs the actual evaluation of resource modifiers.
+    /// </summary>
+    /// <param name="modifiers"></param>
+    /// <param name="delta"></param>
     void EvaluateModifiers(Span<IResourceModifier> modifiers, double delta)
     {
         ReadOnlySpan<ResourceType> resourceTypes = default;
         GetResourceTypes(ref resourceTypes);
 
-        // Multiplier pass //
-
         Span<ResourceMultiplier> multipliers =
             stackalloc ResourceMultiplier[resourceTypes.Length];
 
+        ProcessMultiplicatives(multipliers, modifiers, delta);
+        ProcessAdditives(multipliers, modifiers, delta);
+
+        UpdateResources();
+    }
+
+    /// Passes ///
+
+    /// <summary>
+    /// <para>
+    /// * Multiplier pass *
+    /// </para>
+    /// <para>
+    /// Iterates through the modifiers list and accumulates the multipliers of each resource types.
+    /// </para>
+    /// </summary>
+    void ProcessMultiplicatives(
+        Span<ResourceMultiplier> multipliers,
+        Span<IResourceModifier> modifiers,
+        double delta)
+    {
         // Set default multipliers
-        for (int i = 0; i < resourceTypes.Length; ++ i)
+        for (int i = 0; i < resourceTypes.Length; ++i)
         {
             multipliers[i] = new(
                 resource: resourceTypes[i],
@@ -59,18 +83,15 @@ public sealed partial class GameState
         }
 
         // Accumulate modifiers from all sources
-        for (int i = 0; i < modifiers.Length; ++ i)
+        for (int i = 0; i < modifiers.Length; ++i)
         {
-            if (!modifiers[i].ModifierIsActive(this, delta))
-                continue;
-
             ResourceModifier modifier = default;
             modifiers[i].ModifierGet(this, ref modifier);
 
             if (modifier.Type != ResourceModifierType.Multiplicative)
                 continue;
 
-            for (int j = 0; j < multipliers.Length; ++ j)
+            for (int j = 0; j < multipliers.Length; ++j)
             {
                 if (multipliers[j].Resource != modifier.Resource)
                     continue;
@@ -79,47 +100,66 @@ public sealed partial class GameState
                 break;
             }
         }
+    }
 
-        // Additive Pass //
-
-        for (int i = 0; i < modifiers.Length; ++ i)
+    /// <summary>
+    /// <para>
+    /// + Additive Pass +
+    /// </para>
+    /// <para>
+    /// Iterates through the active modifier list and adds their value to the total resource counts. (Affected by multipliers.)
+    /// </para>
+    /// </summary>
+    void ProcessAdditives(
+        Span<ResourceMultiplier> multipliers,
+        Span<IResourceModifier> modifiers,
+        double delta)
+    {
+        for (int i = 0; i < modifiers.Length; ++i)
         {
-            if (!modifiers[i].ModifierIsActive(this, delta))
-                continue;
-
             ResourceModifier modifier = default;
             modifiers[i].ModifierGet(this, ref modifier);
 
             if (modifier.Type != ResourceModifierType.Additive)
                 continue;
 
-            double multiplier = 1.0;
-
-            for (int j = 0; j < multipliers.Length; ++ j)
-            {
-                if (modifier.Resource != multipliers[j].Resource)
-                    continue;
-
-                multiplier = multipliers[j].Multiplier;
-                break;
-            }
-
-            double modTotal = modifier.Amount * multiplier;
+            double modTotal = GetMultiplier(multipliers, modifier.Resource) * modifier.Amount;
 
             Resources[modifier.Resource] =
                 Mathf.Max(0.0f, Resources[modifier.Resource] + modTotal);
         }
-
-        UpdateResources();
     }
+
+    /// Helpers ///
 
     void AppendToSpan(
         IResourceModifier modifier,
+        double delta,
         ref Span<IResourceModifier> modifiers,
         ref int index)
     {
+        // Only allow active modifiers
+        if (!modifier.ModifierIsActive(this, delta))
+            return;
+
         modifiers[index] = modifier;
         index ++;
+    }
+
+    /// <summary>
+    /// Returns the accumulated multiplier for a given resource type.
+    /// </summary>
+    double GetMultiplier(Span<ResourceMultiplier> multipliers, ResourceType type)
+    {
+        for (int j = 0; j < multipliers.Length; ++j)
+        {
+            if (type != multipliers[j].Resource)
+                continue;
+
+            return multipliers[j].Multiplier;
+        }
+
+        return 1.0;
     }
 
     struct ResourceMultiplier
