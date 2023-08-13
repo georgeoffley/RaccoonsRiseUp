@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://c3vhl3m2xg1jg"]
+[gd_scene load_steps=17 format=3 uid="uid://c3vhl3m2xg1jg"]
 
 [ext_resource type="Script" path="res://Scripts/Game/Game.cs" id="1_i188o"]
 [ext_resource type="PackedScene" uid="uid://lv08ttqpvfes" path="res://Scenes/info.tscn" id="1_lxhla"]
@@ -11,6 +11,7 @@
 [ext_resource type="Script" path="res://Scripts/World.cs" id="6_ub1nu"]
 [ext_resource type="PackedScene" uid="uid://ccyv0c2rj7ly1" path="res://Scenes/Prefabs/UI/ui_tech_node_info.tscn" id="7_xo228"]
 [ext_resource type="PackedScene" uid="uid://c6pism2kgjr5c" path="res://Scenes/Prefabs/UI/popup_menu.tscn" id="10_bjrvn"]
+[ext_resource type="PackedScene" uid="uid://t2xckfn7lobi" path="res://Scenes/Prefabs/UI/game_console.tscn" id="11_5ppvy"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_qtnpn"]
 texture = ExtResource("6_lwov1")
@@ -232,31 +233,36 @@ script = ExtResource("1_i188o")
 gameState = ExtResource("2_tndqm")
 techData = ExtResource("5_g65f1")
 
-[node name="TabContainer" type="TabContainer" parent="."]
+[node name="VSplitContainer" type="VSplitContainer" parent="."]
+layout_mode = 2
+split_offset = 175
+
+[node name="TabContainer" type="TabContainer" parent="VSplitContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Info" parent="VSplitContainer/TabContainer" instance=ExtResource("1_lxhla")]
 layout_mode = 2
 
-[node name="Info" parent="TabContainer" instance=ExtResource("1_lxhla")]
-layout_mode = 2
-
-[node name="Jobs" parent="TabContainer" instance=ExtResource("2_vouy1")]
+[node name="Jobs" parent="VSplitContainer/TabContainer" instance=ExtResource("2_vouy1")]
 visible = false
 layout_mode = 2
 
-[node name="Tech" type="HSplitContainer" parent="TabContainer"]
+[node name="Tech" type="HSplitContainer" parent="VSplitContainer/TabContainer"]
 visible = false
 layout_mode = 2
 dragger_visibility = 2
 
-[node name="HSplitContainer" type="HSplitContainer" parent="TabContainer/Tech"]
+[node name="HSplitContainer" type="HSplitContainer" parent="VSplitContainer/TabContainer/Tech"]
 layout_mode = 2
 dragger_visibility = 2
 
-[node name="Canvas" type="SubViewportContainer" parent="TabContainer/Tech/HSplitContainer"]
+[node name="Canvas" type="SubViewportContainer" parent="VSplitContainer/TabContainer/Tech/HSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 stretch = true
 
-[node name="SubViewport" type="SubViewport" parent="TabContainer/Tech/HSplitContainer/Canvas" node_paths=PackedStringArray("detailsView")]
+[node name="SubViewport" type="SubViewport" parent="VSplitContainer/TabContainer/Tech/HSplitContainer/Canvas" node_paths=PackedStringArray("detailsView")]
 handle_input_locally = false
 size = Vector2i(2, 2)
 render_target_update_mode = 0
@@ -265,46 +271,50 @@ techNodeSpacing = 30
 techData = ExtResource("5_g65f1")
 detailsView = NodePath("../../TechNodeInfo")
 
-[node name="Camera2D" type="Camera2D" parent="TabContainer/Tech/HSplitContainer/Canvas/SubViewport"]
+[node name="Camera2D" type="Camera2D" parent="VSplitContainer/TabContainer/Tech/HSplitContainer/Canvas/SubViewport"]
 
-[node name="CameraController" type="Node2D" parent="TabContainer/Tech/HSplitContainer/Canvas/SubViewport/Camera2D"]
+[node name="CameraController" type="Node2D" parent="VSplitContainer/TabContainer/Tech/HSplitContainer/Canvas/SubViewport/Camera2D"]
 script = ExtResource("5_wlc8b")
 Speed = 25.0
 ZoomIncrementDefault = 0.1
 MinZoom = 0.4
 
-[node name="TechNodeInfo" parent="TabContainer/Tech/HSplitContainer" node_paths=PackedStringArray("splitView") instance=ExtResource("7_xo228")]
+[node name="TechNodeInfo" parent="VSplitContainer/TabContainer/Tech/HSplitContainer" node_paths=PackedStringArray("splitView") instance=ExtResource("7_xo228")]
 layout_mode = 2
 splitView = NodePath("..")
 
-[node name="World" type="SubViewportContainer" parent="TabContainer"]
+[node name="World" type="SubViewportContainer" parent="VSplitContainer/TabContainer"]
 visible = false
 layout_mode = 2
 stretch = true
 
-[node name="SubViewport" type="SubViewport" parent="TabContainer/World"]
+[node name="SubViewport" type="SubViewport" parent="VSplitContainer/TabContainer/World"]
 handle_input_locally = false
 canvas_item_default_texture_filter = 0
 size = Vector2i(2, 2)
 render_target_update_mode = 0
 script = ExtResource("6_ub1nu")
 
-[node name="Grass" type="TileMap" parent="TabContainer/World/SubViewport"]
+[node name="Grass" type="TileMap" parent="VSplitContainer/TabContainer/World/SubViewport"]
 tile_set = SubResource("TileSet_2bw0q")
 format = 2
 
-[node name="Layer2" type="TileMap" parent="TabContainer/World/SubViewport"]
+[node name="Layer2" type="TileMap" parent="VSplitContainer/TabContainer/World/SubViewport"]
 tile_set = SubResource("TileSet_1s4vs")
 format = 2
 
-[node name="Camera2D" type="Camera2D" parent="TabContainer/World/SubViewport"]
+[node name="Camera2D" type="Camera2D" parent="VSplitContainer/TabContainer/World/SubViewport"]
 
-[node name="CameraController" type="Node2D" parent="TabContainer/World/SubViewport/Camera2D"]
+[node name="CameraController" type="Node2D" parent="VSplitContainer/TabContainer/World/SubViewport/Camera2D"]
 script = ExtResource("5_wlc8b")
 Speed = 3.0
 ZoomIncrementDefault = 0.1
 MinZoom = 2.0
 MaxZoom = 5.0
+
+[node name="Game Console" parent="VSplitContainer" instance=ExtResource("11_5ppvy")]
+unique_name_in_owner = true
+layout_mode = 2
 
 [node name="UIPopupMenu" parent="." instance=ExtResource("10_bjrvn")]
 visible = false
