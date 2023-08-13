@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://c3vhl3m2xg1jg"]
+[gd_scene load_steps=17 format=3 uid="uid://c3vhl3m2xg1jg"]
 
 [ext_resource type="Script" path="res://Scripts/Game/Game.cs" id="1_i188o"]
 [ext_resource type="PackedScene" uid="uid://lv08ttqpvfes" path="res://Scenes/info.tscn" id="1_lxhla"]
@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://bwyp57e85ufa0" path="res://Sprites/Tilesets/basictiles.png" id="6_lwov1"]
 [ext_resource type="Script" path="res://Scripts/World.cs" id="6_ub1nu"]
 [ext_resource type="PackedScene" uid="uid://ccyv0c2rj7ly1" path="res://Scenes/Prefabs/UI/ui_tech_node_info.tscn" id="7_xo228"]
+[ext_resource type="PackedScene" uid="uid://c3p0ul44nasqs" path="res://Scenes/structures.tscn" id="9_8hj5a"]
 [ext_resource type="PackedScene" uid="uid://c6pism2kgjr5c" path="res://Scenes/Prefabs/UI/popup_menu.tscn" id="10_bjrvn"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_qtnpn"]
@@ -276,6 +277,10 @@ MinZoom = 0.4
 [node name="TechNodeInfo" parent="TabContainer/Tech/HSplitContainer" node_paths=PackedStringArray("splitView") instance=ExtResource("7_xo228")]
 layout_mode = 2
 splitView = NodePath("..")
+
+[node name="Structures" parent="TabContainer" instance=ExtResource("9_8hj5a")]
+visible = false
+layout_mode = 2
 
 [node name="World" type="SubViewportContainer" parent="TabContainer"]
 visible = false
