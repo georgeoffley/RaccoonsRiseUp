@@ -16,7 +16,7 @@ public partial class PopupManager : Node
         popupQueue.Add(popup);
 
         // This is fired when the popup gets queue freed
-        popup.TreeExited += () =>
+        popup.OutOfSight += () =>
         {
             // Remove the popup from the queue
             popupQueue.Remove(popup);

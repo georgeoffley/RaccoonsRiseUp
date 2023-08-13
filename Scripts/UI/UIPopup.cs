@@ -2,6 +2,8 @@ namespace RRU;
 
 public partial class UIPopup : PanelContainer
 {
+    public event Action OutOfSight;
+
     double duration = 4;
     int dir = 1;
 
@@ -130,11 +132,16 @@ public partial class UIPopup : PanelContainer
             .SetTrans(Tween.TransitionType.Expo)
             .SetEase(Tween.EaseType.Out);
 
-    void AnimateHide(GTween tween, double transDuration) =>
+    void AnimateHide(GTween tween, double transDuration)
+    {
         tween.Animate("position", Position + new Vector2(0, Size.Y) * dir, transDuration)
             .SetDelay(this.duration)
             .SetTrans(Tween.TransitionType.Sine)
             .SetEase(Tween.EaseType.Out);
+
+        tween.Callback(() => OutOfSight?.Invoke(), true)
+            .SetDelay(this.duration + 0.5);
+    }
 
     public enum Layout
     {
