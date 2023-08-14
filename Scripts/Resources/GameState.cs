@@ -18,6 +18,8 @@ public sealed partial class GameState : Resource
     public JobDict Jobs { get; set; }
     public StructureDict Structures { get; set; }
     public ResourceDict Resources { get; set; }
+    public bool LoadedGameBefore { get; set; }
+    public DateTime StartOfGame { get; set; }
 
     readonly JobType[] jobTypes;
     readonly ResourceType[] resourceTypes;

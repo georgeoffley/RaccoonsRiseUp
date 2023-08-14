@@ -7,4 +7,6 @@ public partial class SaveData
     public Dictionary<ResourceType, double> NumResources { get; set; }
     public Dictionary<StructureType, int> NumStructures { get; set; }
     public string[] ResearchedUpgrades { get; set; }
+    public DateTime StartOfGame { get; set; }
+    public bool LoadedGameBefore { get; set; }
 }

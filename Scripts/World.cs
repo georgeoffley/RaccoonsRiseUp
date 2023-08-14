@@ -1,9 +1,9 @@
-using Godot;
-
 namespace RRU;
 
 public partial class World : SubViewport
 {
+    [Export] GameState gameState;
+
     FastNoiseLite fnlGrass = new()
     {
         Frequency = 0.05f
@@ -15,6 +15,8 @@ public partial class World : SubViewport
     };
     TileMap tileMapGrass;
     TileMap tileMapLayer2;
+    Label clock;
+    CanvasModulate canvasModulate;
     Dictionary<string, Vector2I[]> tiles = new()
     {
         { 
@@ -46,6 +48,8 @@ public partial class World : SubViewport
 
     public override void _Ready()
     {
+        clock = GetNode<Label>("%Clock");
+        canvasModulate = GetNode<CanvasModulate>("CanvasModulate");
         tileMapGrass = GetNode<TileMap>("Grass");
         tileMapLayer2 = GetNode<TileMap>("Layer2");
 
@@ -59,6 +63,42 @@ public partial class World : SubViewport
             }
         }
     }
+
+    bool isDay = true;
+
+    public override void _PhysicsProcess(double delta)
+    {
+        // Multiply by 50 to speed up in-game time for testing
+        TimeSpan diff = (DateTime.Now - gameState.StartOfGame) * 50;
+        double seconds = diff.TotalSeconds;
+
+        byte white = isDay ?
+            (byte)(seconds % 255) : (byte)(255 - seconds % 255);
+
+        if (isDay && white == 254)
+            isDay = !isDay;
+
+        // 254
+        // 0
+
+        GD.Print(white);
+
+        UpdateClock(diff);
+
+        canvasModulate.Color = Color.Color8(white, white, white, 255);
+    }
+
+    void UpdateClock(TimeSpan diff)
+    {
+        var days = LeadingZero(diff.Days);
+        var hours = LeadingZero(diff.Hours);
+        var minutes = LeadingZero(diff.Minutes);
+        var seconds = LeadingZero(diff.Seconds);
+
+        clock.Text = $"{days}:{hours}:{minutes}:{seconds}";
+    }
+
+    string LeadingZero(int n) => n.ToString().PadLeft(2, '0');
 
     void SetupTile(int x, int y)
     {

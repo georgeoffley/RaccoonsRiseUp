@@ -24,13 +24,18 @@ public partial class Game : Node
 
     public void SaveGame()
     {
+        if (!gameState.LoadedGameBefore)
+            gameState.StartOfGame = DateTime.Now;
+
         var saveData = new SaveData
         {
             Raccoons = gameState.Raccoons,
             NumJobs = gameState.Jobs,
             NumResources = gameState.Resources,
             NumStructures = gameState.Structures,
-            ResearchedUpgrades = techData.Serialise()
+            ResearchedUpgrades = techData.Serialise(),
+            LoadedGameBefore = true,
+            StartOfGame = gameState.StartOfGame
         };
 
         var content = JsonConvert.SerializeObject(saveData, Formatting.Indented);
@@ -54,6 +59,8 @@ public partial class Game : Node
         gameState.Jobs = saveData.NumJobs;
         gameState.Resources = saveData.NumResources;
         gameState.Structures = saveData.NumStructures;
+        gameState.LoadedGameBefore = saveData.LoadedGameBefore;
+        gameState.StartOfGame = saveData.StartOfGame;
 
         if (saveData.ResearchedUpgrades != null)
         {
