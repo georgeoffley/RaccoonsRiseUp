@@ -2,6 +2,7 @@ namespace RRU;
 
 public static class Prefabs
 {
+    public static PackedScene Popup { get; } = Load("UI/popup");
     public static PackedScene Structure { get; } = Load("UI/structure");
     public static PackedScene TechNode { get; } = Load("UI/tech_node");
     public static PackedScene Job { get; } = Load("UI/job");

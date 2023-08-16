@@ -22,6 +22,25 @@ public partial class Game : Node
             .OnQuitRequest += SaveGame;
     }
 
+    
+
+    public override void _Input(InputEvent @event)
+    {
+        if (@event is InputEventKey key)
+        {
+            if (key.Keycode == Key.F1 && !key.Echo && key.Pressed)
+            {
+                var popup = Prefabs.Popup.Instantiate<UIPopup>()
+                    .SetLayout(UIPopup.Layout.BottomRight)
+                    .SetColor(Colors.Magenta)
+                    .SetDuration(2)
+                    .SetDescription("Don't point that thing at me!");
+
+                PopupManager.QueuePopup(popup);
+            }
+        }
+    }
+
     public void SaveGame()
     {
         var saveData = new SaveData

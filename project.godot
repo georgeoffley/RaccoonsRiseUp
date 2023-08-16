@@ -22,6 +22,7 @@ Global="*res://Scenes/Autoloads/global.tscn"
 OptionsManager="*res://Scripts/Autoloads/OptionsManager.cs"
 AudioManager="*res://Scenes/Autoloads/audio_manager.tscn"
 SceneManager="*res://GodotUtils/Autoload/SceneManager.cs"
+PopupManager="*res://Scripts/Autoloads/PopupManager.cs"
 
 [dotnet]
 
