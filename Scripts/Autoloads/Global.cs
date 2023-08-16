@@ -52,5 +52,6 @@ public partial class Global : Node
         OptionsManager.SaveHotkeys();
 
         OnQuitRequest.Invoke();
+        GetTree().Quit();
     }
 }
