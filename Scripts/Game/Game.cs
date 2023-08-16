@@ -20,6 +20,12 @@ public partial class Game : Node
     {
         GetNode<Global>(Global.GetNodePath)
             .OnQuitRequest += SaveGame;
+
+        var gameConsole = GetNode<UIGameConsole>("%Game Console");
+
+        var timer = new GTimer(this, 100) { Loop = true };
+        timer.Finished += () => gameConsole.AddText("A new raccoon has joined your encampment!");
+        timer.Start();
     }
 
     
