@@ -1,0 +1,67 @@
+[gd_scene load_steps=7 format=3 uid="uid://buheijv37ga0d"]
+
+[ext_resource type="Script" path="res://Scripts/UI/UIPopup.cs" id="1_kyi2a"]
+[ext_resource type="Texture2D" uid="uid://drgg1n8mxip81" path="res://Sprites/Icons/wood-beam.svg" id="2_5qhn4"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e5yif"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.564706, 0, 1, 1)
+
+[sub_resource type="Gradient" id="Gradient_gw2pp"]
+colors = PackedColorArray(0.446757, 0, 1, 1, 0.927193, 0, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_ctcy1"]
+gradient = SubResource("Gradient_gw2pp")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ne42g"]
+texture = SubResource("GradientTexture2D_ctcy1")
+
+[node name="Popup" type="PanelContainer"]
+offset_right = 438.0
+offset_bottom = 52.0
+size_flags_horizontal = 8
+size_flags_vertical = 8
+theme_override_styles/panel = SubResource("StyleBoxFlat_e5yif")
+script = ExtResource("1_kyi2a")
+
+[node name="InnerPanel" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+theme_override_styles/panel = SubResource("StyleBoxTexture_ne42g")
+
+[node name="HBox" type="HBoxContainer" parent="InnerPanel"]
+layout_mode = 2
+
+[node name="MarginIcon" type="MarginContainer" parent="InnerPanel/HBox"]
+layout_mode = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
+
+[node name="Icon" type="TextureRect" parent="InnerPanel/HBox/MarginIcon"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+texture = ExtResource("2_5qhn4")
+expand_mode = 2
+
+[node name="MarginText" type="MarginContainer" parent="InnerPanel/HBox"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 20
+
+[node name="Description" type="Label" parent="InnerPanel/HBox/MarginText"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "A group of bandits are raiding your encampment!"
+horizontal_alignment = 1
+vertical_alignment = 1
