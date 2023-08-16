@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://c3vhl3m2xg1jg"]
+[gd_scene load_steps=18 format=3 uid="uid://c3vhl3m2xg1jg"]
 
 [ext_resource type="Script" path="res://Scripts/Game/Game.cs" id="1_i188o"]
 [ext_resource type="PackedScene" uid="uid://lv08ttqpvfes" path="res://Scenes/info.tscn" id="1_lxhla"]
@@ -7,10 +7,10 @@
 [ext_resource type="Script" path="res://Scripts/UI/UITech.cs" id="4_ymnje"]
 [ext_resource type="Resource" uid="uid://bq25wiv36tld1" path="res://Resources/res_shared_data_service.tres" id="5_g65f1"]
 [ext_resource type="Script" path="res://Scripts/UI/TechCameraController.cs" id="5_wlc8b"]
+[ext_resource type="PackedScene" uid="uid://c3p0ul44nasqs" path="res://Scenes/structures.tscn" id="6_0g8gf"]
 [ext_resource type="Texture2D" uid="uid://bwyp57e85ufa0" path="res://Sprites/Tilesets/basictiles.png" id="6_lwov1"]
 [ext_resource type="Script" path="res://Scripts/World.cs" id="6_ub1nu"]
 [ext_resource type="PackedScene" uid="uid://ccyv0c2rj7ly1" path="res://Scenes/Prefabs/UI/ui_tech_node_info.tscn" id="7_xo228"]
-[ext_resource type="PackedScene" uid="uid://c3p0ul44nasqs" path="res://Scenes/structures.tscn" id="9_8hj5a"]
 [ext_resource type="PackedScene" uid="uid://c6pism2kgjr5c" path="res://Scenes/Prefabs/UI/popup_menu.tscn" id="10_bjrvn"]
 [ext_resource type="PackedScene" uid="uid://t2xckfn7lobi" path="res://Scenes/Prefabs/UI/game_console.tscn" id="11_5ppvy"]
 
@@ -246,6 +246,10 @@ size_flags_vertical = 3
 layout_mode = 2
 
 [node name="Jobs" parent="VSplitContainer/TabContainer" instance=ExtResource("2_vouy1")]
+visible = false
+layout_mode = 2
+
+[node name="Structures" parent="VSplitContainer/TabContainer" instance=ExtResource("6_0g8gf")]
 visible = false
 layout_mode = 2
 
